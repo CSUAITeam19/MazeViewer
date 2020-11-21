@@ -82,5 +82,16 @@ namespace MazeViewer.Viewer
             temp.GetComponent<ICell>().CellPosition = pos;
             return temp;
         }
+
+        /// <summary>
+        /// 回收所有单元
+        /// </summary>
+        public void RecycleAll()
+        {
+            wallPool.PushAll();
+            routePool.PushAll();
+            entryMarker.transform.position = Vector3.zero;
+            exitMarker.transform.position = new Vector3(1, 0, 0);
+        }
     } 
 }

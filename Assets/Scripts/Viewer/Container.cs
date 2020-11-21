@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using MazeViewer.Maze;
+using UnityEngine.Serialization;
 
 namespace MazeViewer.Viewer
 {
@@ -13,14 +14,15 @@ namespace MazeViewer.Viewer
 
         [SerializeField] private CellFactory cellFactory;
         public float scale;
-        public string path = "";
+        [FormerlySerializedAs("path")] public string mazePath = "";
+        public string resultPath = "";
         public int maxMergedInOne = 256;
         public Material wallMaterial;
         [SerializeField] private Transform mergedMeshes;
-        [SerializeField]  private GameObject rendererPrefeb;
+        [SerializeField] private GameObject rendererPrefeb;
         private Vector3 size;
 
-        private void CombineWithNewMesh(MeshFilter target,  List<CombineInstance> instances)
+        private void CombineWithNewMesh(MeshFilter target, List<CombineInstance> instances)
         {
             var originalMesh = target.mesh;
             target.mesh = new Mesh();
@@ -28,10 +30,10 @@ namespace MazeViewer.Viewer
             CombineInstance tempInstance = new CombineInstance
             {
                 mesh = originalMesh,
-                transform  = target.transform.localToWorldMatrix
+                transform = target.transform.localToWorldMatrix
             };
             toCombine.Add(tempInstance);
-            target.mesh.CombineMeshes(toCombine.ToArray(),true,true);
+            target.mesh.CombineMeshes(toCombine.ToArray(), true, true);
         }
 
         IEnumerator MergeMesh()
@@ -43,17 +45,17 @@ namespace MazeViewer.Viewer
             var toAddInstances = new List<CombineInstance>();
             targetRenderer.sharedMaterial = wallMaterial;
             float beginTime = Time.time;
-            
-            foreach (var row in cellObjs)
+
+            foreach(var row in cellObjs)
             {
                 // get all walls in row
                 foreach(var obj in row)
                 {
-                    if ((obj.GetComponent<WallCell>()) != null)
+                    if((obj.GetComponent<WallCell>()) != null)
                     {
                         CombineInstance tempInstance = new CombineInstance
                         {
-                            mesh = obj.GetComponent<MeshFilter>().mesh, 
+                            mesh = obj.GetComponent<MeshFilter>().mesh,
                             transform = obj.transform.localToWorldMatrix
                         };
                         toAddInstances.Add(tempInstance);
@@ -71,7 +73,7 @@ namespace MazeViewer.Viewer
                     int inRangeCount = toAddInstances.Count - meshMerged + maxMergedInOne;
                     List<CombineInstance> instancesInRange =
                         new List<CombineInstance>(toAddInstances.GetRange(0, inRangeCount));
-                    CombineWithNewMesh(targetFilter,instancesInRange);
+                    CombineWithNewMesh(targetFilter, instancesInRange);
                     // shift to new object, combine the overflowed part
                     targetObj = Instantiate(rendererPrefeb, mergedMeshes);
                     targetRenderer = targetObj.GetComponent<MeshRenderer>();
@@ -82,26 +84,30 @@ namespace MazeViewer.Viewer
                     meshMerged = toAddInstances.Count;
                 }
                 toAddInstances.Clear();
-                if (Time.time - beginTime > 0.02)
+                if(Time.time - beginTime > 0.02)
                 {
                     beginTime = Time.time;
                     yield return null;
                 }
             }
-                
+
         }
 
-        void Start()
+        /// <summary>
+        /// 加载迷宫
+        /// </summary>
+        public void LoadMaze()
         {
-            var maze = MazeIO.ReadFromFile(path);
+            var maze = MazeIO.ReadFromFile(mazePath);
             // return if empty
-            if (maze.Count < 1 || maze[0].Count < 1) return;
+            if(maze.Count < 1 || maze[0].Count < 1)
+                return;
             // convert all to cellObjs;
             cellObjs = new List<List<GameObject>>();
-            for (var i = 0; i < maze.Count; i++)
+            for(var i = 0; i < maze.Count; i++)
             {
                 cellObjs.Add(new List<GameObject>());
-                for (var j = 0; j < maze[0].Count; j++)
+                for(var j = 0; j < maze[0].Count; j++)
                 {
                     cellObjs[i].Add(cellFactory.GetCellObj(new Vector2Int(i, j), maze[i][j]));
                     cellObjs[i][j].transform.SetParent(transform);
@@ -112,10 +118,29 @@ namespace MazeViewer.Viewer
 
             size = new Vector3(maze.Count, 0, maze[0].Count);
             // transform.position = -size / 2;
-            
+
             // merge all walls
             StartCoroutine(MergeMesh());
         }
+
+        /// <summary>
+        /// 清空迷宫
+        /// </summary>
+        public void ClearMaze()
+        {
+            cellFactory.RecycleAll();
+            // 清除所有生成的网格
+            for(int i = 0; i < mergedMeshes.childCount; i++)
+            {
+                var tempObject = mergedMeshes.GetChild(i).gameObject;
+                tempObject.GetComponent<MeshFilter>().mesh = new Mesh();
+                Destroy(tempObject);
+            }
+        }
+
+        public void UpdateMazePath(string path) => mazePath = path;
+
+        public void UpdateResultPath(string path) => resultPath = path;
     }
 
 }
