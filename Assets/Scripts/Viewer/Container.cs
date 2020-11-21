@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using MazeViewer.Maze;
+using Unitilities;
 using UnityEngine.Serialization;
 
 namespace MazeViewer.Viewer
@@ -21,6 +22,8 @@ namespace MazeViewer.Viewer
         [SerializeField] private Transform mergedMeshes;
         [SerializeField] private GameObject rendererPrefeb;
         private Vector3 size;
+        private Vector2Int exitPos;
+        private OperationChain chain;
 
         private void CombineWithNewMesh(MeshFilter target, List<CombineInstance> instances)
         {
@@ -98,7 +101,7 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void LoadMaze()
         {
-            var maze = MazeIO.ReadFromFile(mazePath);
+            var maze = MazeIO.ReadFromFile(mazePath, out exitPos);
             // return if empty
             if(maze.Count < 1 || maze[0].Count < 1)
                 return;
@@ -121,6 +124,8 @@ namespace MazeViewer.Viewer
 
             // merge all walls
             StartCoroutine(MergeMesh());
+            chain = MazeIO.ReadSearchDataFromFile(resultPath,
+                cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), exitPos);
         }
 
         /// <summary>
@@ -136,6 +141,38 @@ namespace MazeViewer.Viewer
                 tempObject.GetComponent<MeshFilter>().mesh = new Mesh();
                 Destroy(tempObject);
             }
+        }
+
+        private void Update()
+        {
+#if UNITY_EDITOR
+            if(Input.GetKeyDown(KeyCode.Z))
+#else
+            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z))
+#endif
+            {
+                Undo();
+            }
+#if UNITY_EDITOR
+            if(Input.GetKeyDown(KeyCode.Y))
+#else
+            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Y))
+#endif
+            {
+                Redo();
+            }
+        }
+
+        [ContextMenu("Redo")]
+        public void Redo()
+        {
+            chain.Redo();
+        }
+
+        [ContextMenu("Undo")]
+        public void Undo()
+        {
+            chain.Undo();
         }
 
         public void UpdateMazePath(string path) => mazePath = path;

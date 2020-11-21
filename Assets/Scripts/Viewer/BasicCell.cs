@@ -8,9 +8,11 @@ namespace MazeViewer.Viewer
     /// <summary>
     /// 所有基本单元的统一实现
     /// </summary>
-    public class BasicCell : MonoBehaviour,ICellObj
+    public class BasicCell : MonoBehaviour, ICellObj
     {
         protected Vector2Int cellPosition;
+        protected CellSearchData searchData = CellSearchData.defaultData;
+        public CellSearchData SearchData => searchData;
 
         public virtual Vector2Int CellPosition
         {
@@ -29,10 +31,11 @@ namespace MazeViewer.Viewer
             
         }
 
-        public virtual void UpdateSearchState(SearchState searchState)
+        public virtual void UpdateSearchState(CellSearchData searchData)
         {
-            
+            // Debug.Log(cellPosition + ": search state: " + searchData.state);
         }
+
     }
 
 }

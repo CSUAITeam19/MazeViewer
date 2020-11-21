@@ -13,9 +13,14 @@ namespace MazeViewer.Viewer
         void Init();
 
         /// <summary>
-        /// 更新搜索状态
+        /// 更新搜索单元数据
         /// </summary>
-        /// <param name="searchState"></param>
-        void UpdateSearchState(SearchState searchState);
+        /// <param name="searchData"></param>
+        void UpdateSearchState(CellSearchData searchData);
+
+        /// <summary>
+        /// 搜索数据
+        /// </summary>
+        CellSearchData SearchData { get; }
     }
 }
