@@ -65,7 +65,7 @@ namespace MazeViewer.Maze
                 hList.Add(new List<int>());
                 for(int j = 0; j < cellList[0].Count; j++)
                 {
-                    hList[i].Add(Mathf.Abs(i - exitPos.x) + Mathf.Abs(j - exitPos.y));
+                    hList[i].Add((Mathf.Abs(i - exitPos.x) + Mathf.Abs(j - exitPos.y)) * 10);
                 }
             }
             

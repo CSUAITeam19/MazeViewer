@@ -1,24 +1,26 @@
 ﻿using System;
 using UnityEngine;
 using MazeViewer.Maze;
+using Unitilities.Effect;
 
 namespace MazeViewer.Viewer
 {
     public class RouteCell : BasicCell
     {
 
-        // temp implement
-        [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private ColorChange colorChanges;
+        [SerializeField] private GameObject dataText;
+        [SerializeField] private TextMesh cost, h;
 
-        public override Vector2Int CellPosition
-        {
-            get => cellPosition;
-            set
-            {
-                cellPosition = value;
-                transform.localPosition = new Vector3(value.x, -0.5f, value.y);
-            }
-        }
+        //public override Vector2Int CellPosition
+        //{
+        //    get => cellPosition;
+        //    set
+        //    {
+        //        cellPosition = value;
+        //        transform.localPosition = new Vector3(value.x, -0.5f, value.y);
+        //    }
+        //}
 
         public override MazeState State => MazeState.Route;
 
@@ -27,18 +29,23 @@ namespace MazeViewer.Viewer
         /// </summary>
         private void RefreshData()
         {
-            // TODO: show 3d text
-            Debug.Log($"{cellPosition}: cost = {searchData.cost}, h = {searchData.h}");
+            cost.text = searchData.cost.ToString();
+            h.text = searchData.h.ToString();
         }
 
-        
+        public override void Init()
+        {
+            BackToIdle();
+        }
 
         /// <summary>
         /// 播放开启特效
         /// </summary>
         private void StartOpenEffect()
         {
-            meshRenderer.material.color = Color.green;
+            dataText.SetActive(true);
+            colorChanges.ResetColor(Color.green);
+            colorChanges.Play();
         }
 
         /// <summary>
@@ -46,20 +53,23 @@ namespace MazeViewer.Viewer
         /// </summary>
         private void StartCloseEffect()
         {
-            meshRenderer.material.color = Color.gray;
+            dataText.SetActive(true);
+            colorChanges.ResetColor(Color.gray);
+            colorChanges.Play();
         }
 
         /// <summary>
-        /// 直接转变为Idle状态, 没有动画
+        /// 立即转变为Idle状态
         /// </summary>
         private void BackToIdle()
         {
-            meshRenderer.material.color = Color.white;
+            colorChanges.ResetColor(Color.white);
+            colorChanges.Stop();
+            dataText.SetActive(false);
         }
 
         public override void UpdateSearchState(CellSearchData searchData)
         {
-            // TODO: 返回到未搜索的状态
             if(searchData.state != this.searchData.state)
             {
                 switch (searchData.state)
