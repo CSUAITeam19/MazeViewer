@@ -126,6 +126,7 @@ namespace MazeViewer.Viewer
             StartCoroutine(MergeMesh());
             chain = MazeIO.ReadSearchDataFromFile(resultPath,
                 cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), exitPos);
+            chain.UndoAll();
         }
 
         /// <summary>

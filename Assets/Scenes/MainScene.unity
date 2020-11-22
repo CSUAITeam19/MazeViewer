@@ -1466,7 +1466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotScale: {x: 2, y: 2}
-  moveSpeed: {x: 16, y: 16}
+  moveSpeed: {x: 16, y: 16, z: 16}
 --- !u!1 &968473192
 GameObject:
   m_ObjectHideFlags: 0

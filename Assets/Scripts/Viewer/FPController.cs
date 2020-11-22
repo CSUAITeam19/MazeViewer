@@ -5,7 +5,7 @@ namespace MazeViewer.Viewer
     public class FPController : MonoBehaviour
     {
         public Vector2 rotScale;
-        public Vector2 moveSpeed;
+        public Vector3 moveSpeed;
         private float euler_x;
         private float euler_y;
 
@@ -26,10 +26,12 @@ namespace MazeViewer.Viewer
                 transform.rotation = Quaternion.Euler(euler_x, euler_y, rot.z);
             }
 
-            var forward = transform.forward;
+            var forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
             var right = transform.right;
-            transform.position += (forward * (moveSpeed.x * Input.GetAxis("Vertical")) +
-                                   right * (moveSpeed.y * Input.GetAxis("Horizontal"))) *
+            var up = Vector3.up * (Input.GetAxis("Jump") - Input.GetAxis("Dive"));
+            transform.position += (forward * (moveSpeed.z * Input.GetAxis("Vertical")) +
+                                   right * (moveSpeed.x * Input.GetAxis("Horizontal")) +
+                                   up * moveSpeed.y) *
                                   Time.deltaTime;
         }
     }
