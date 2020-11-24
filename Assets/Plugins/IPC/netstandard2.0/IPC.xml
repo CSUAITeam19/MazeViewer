@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IPC</name>
+    </assembly>
+    <members>
+        <member name="T:IPC.MazeEditorProxy">
+            <summary>
+            python端迷宫编辑器的代理
+            </summary>
+        </member>
+    </members>
+</doc>
