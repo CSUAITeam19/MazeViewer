@@ -10,13 +10,13 @@ namespace MazeViewer.Viewer.Control
     /// </summary>
     public class ProjectionModeSwitch : MonoBehaviour
     {
-        private Camera camera;
+        private Camera thisCamera;
         private FPController fpController;
         private OrthoController orthoController;
         
         private void Awake()
         {
-            camera = GetComponent<Camera>();
+            thisCamera = GetComponent<Camera>();
             fpController = GetComponent<FPController>();
             orthoController = GetComponent<OrthoController>();
         }
@@ -29,7 +29,7 @@ namespace MazeViewer.Viewer.Control
             if(fpController.enabled)
             {
                 // 切换为正交
-                camera.orthographic = true;
+                thisCamera.orthographic = true;
                 fpController.enabled = false;
                 orthoController.enabled = true;
                 // 考虑到可能下落到过低的位置, 重设一下y
@@ -41,7 +41,7 @@ namespace MazeViewer.Viewer.Control
             else
             {
                 // 切换为透视
-                camera.orthographic = false;
+                thisCamera.orthographic = false;
                 fpController.enabled = true;
                 orthoController.enabled = false;
             }

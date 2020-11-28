@@ -8,9 +8,9 @@ namespace MazeViewer.Viewer
     public class RouteCell : BasicCell
     {
 
-        [SerializeField] private ColorChange colorChanges;
-        [SerializeField] private GameObject dataText;
-        [SerializeField] private TextMesh cost, h;
+        [SerializeField] private ColorChange colorChanges = default;
+        [SerializeField] private GameObject dataText = default;
+        [SerializeField] private TextMesh  cost = default, h = default;
 
         //public override Vector2Int CellPosition
         //{

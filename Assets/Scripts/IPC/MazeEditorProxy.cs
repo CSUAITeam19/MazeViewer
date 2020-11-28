@@ -84,7 +84,7 @@ public class MazeEditorProxy : MonoBehaviour
             switch(editorEvent.eventType)
             {
                 case MazeEditorEventType.HandShake:
-                    mazeUpdateEvent?.Invoke(editorEvent);
+                    editorHandShakeEvent?.Invoke(editorEvent);
                     break;
                 case MazeEditorEventType.Update:
                     mazeUpdateEvent?.Invoke(editorEvent);

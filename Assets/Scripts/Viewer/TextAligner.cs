@@ -6,7 +6,7 @@ namespace MazeViewer.Viewer
 {
     public class TextAligner : MonoBehaviour
     {
-        [SerializeField] private Transform anchor;
+        [SerializeField] private Transform anchor = default;
         
         /// <summary>
         /// 获取要对齐的方向

@@ -7,17 +7,17 @@ namespace MazeViewer.Viewer
 {
     public class CellFactory : MonoBehaviour
     {
-        [SerializeField] private GameObject entryMarker;
-        [SerializeField] private GameObject exitMarker;
+        [SerializeField] private GameObject entryMarker = default;
+        [SerializeField] private GameObject exitMarker = default;
 
         /// <summary>
         /// 墙物品池
         /// </summary>
-        [SerializeField] private GameObjectPool wallPool;
+        [SerializeField] private GameObjectPool wallPool = default;
         /// <summary>
         /// 路径物品池
         /// </summary>
-        [SerializeField] private GameObjectPool routePool;
+        [SerializeField] private GameObjectPool routePool = default;
 
         /// <summary>
         /// 入口标识
@@ -61,14 +61,15 @@ namespace MazeViewer.Viewer
         public GameObject GetCellObj(Vector2Int pos, MazeState state)
         {
             GameObject temp = null;
-            switch (state)
+            switch(state)
             {
                 case MazeState.Wall:
                     temp = GetWallObj(pos);
                     break;
                 case MazeState.Route:
                     temp = GetRouteObj(pos);
-                    break;;
+                    break;
+                    ;
                 case MazeState.Entry:
                     temp = EntryMarker;
                     break;
@@ -93,5 +94,5 @@ namespace MazeViewer.Viewer
             entryMarker.transform.position = Vector3.zero;
             exitMarker.transform.position = new Vector3(1, 0, 0);
         }
-    } 
+    }
 }

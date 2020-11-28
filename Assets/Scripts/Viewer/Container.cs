@@ -13,14 +13,14 @@ namespace MazeViewer.Viewer
     {
         [SerializeField] private List<List<GameObject>> cellObjs;
 
-        [SerializeField] private CellFactory cellFactory;
+        [SerializeField] private CellFactory cellFactory = default;
         public float scale;
         [FormerlySerializedAs("path")] public string mazePath = "";
         public string resultPath = "";
         public int maxMergedInOne = 256;
         public Material wallMaterial;
-        [SerializeField] private Transform mergedMeshes;
-        [SerializeField] private GameObject rendererPrefeb;
+        [SerializeField] private Transform mergedMeshes = default;
+        [SerializeField] private GameObject rendererPrefeb = default;
         private Vector3 size;
         private Vector2Int exitPos;
         private OperationChain chain;
