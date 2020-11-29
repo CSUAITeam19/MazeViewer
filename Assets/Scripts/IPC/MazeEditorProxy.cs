@@ -48,9 +48,12 @@ public class MazeEditorProxy : MonoBehaviour
     private bool terminated = false;
 
     private ConcurrentQueue<MazeEditorEvent> eventQueue = new ConcurrentQueue<MazeEditorEvent>();
-    private static MazeEditorProxy _instance;
 
-    public static MazeEditorProxy instance => _instance;
+    public static MazeEditorProxy instance
+    {
+        get;
+        private set;
+    }
 
     public event Action<MazeEditorEvent> editorHandShakeEvent;
     public event Action<MazeEditorEvent> mazeUpdateEvent;
@@ -60,19 +63,16 @@ public class MazeEditorProxy : MonoBehaviour
     private void Start()
     {
         // 建立单例
-        if(_instance == null)
+        if(instance == null)
         {
-            _instance = this;
+            instance = this;
         }
         else
         {
             Debug.Log("Cannot have duplicated MazeEditorProxy in one scene!");
             return;
         }
-        // 初始化AsyncIO
-        AsyncIO.ForceDotNet.Force();
-        // 建立socket并启动监听线程
-        socket = new RequestSocket(ConfigManager.instance.Current.mazeEditorAddress);
+        
         sockeThread = new Thread(SocketLoop);
         sockeThread.Start();
 
@@ -111,7 +111,7 @@ public class MazeEditorProxy : MonoBehaviour
     /// <summary>
     /// 解析接收数据
     /// </summary>
-    private void ParseFrameString(string toParse)
+    private void FrameStringProcess(string toParse)
     {
         string head;
         string data;
@@ -130,6 +130,7 @@ public class MazeEditorProxy : MonoBehaviour
         MazeEditorEventType eventType;
         switch(head)
         {
+            // TODO: change header standard to unify name style
             case "Maze_Server":
                 eventType = MazeEditorEventType.HandShake;
                 break;
@@ -156,25 +157,34 @@ public class MazeEditorProxy : MonoBehaviour
     /// </summary>
     private void SocketLoop()
     {
-        try
+#if UNITY_EDITOR
+        // use this to avoid freeze when reload script with (a) scenes running
+        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += ClearSocket;
+#endif
+        // 初始化AsyncIO
+        AsyncIO.ForceDotNet.Force();
+        terminated = false;
+        using(socket = new RequestSocket(ConfigManager.instance.Current.mazeEditorAddress))
         {
-            socket.SendFrame("Unity_Client");
-            ParseFrameString(socket.ReceiveFrameString());
-            while (!terminated)
+            try
             {
-                socket.SendFrameEmpty();
-                ParseFrameString(socket.ReceiveFrameString());
+                socket.SendFrame("Unity_Client");
+                FrameStringProcess(socket.ReceiveFrameString());
+                while (!terminated)
+                {
+                    socket.SendFrameEmpty();
+                    FrameStringProcess(socket.ReceiveFrameString());
+                }
             }
-        }
-        catch (TerminatingException)
-        {
-            Debug.Log("Socket terminated.");
-            NetMQConfig.Cleanup();
-        }
-        catch(Exception e)
-        {
-            Debug.LogError("Oops! something wrong with exception " + e);
-            NetMQConfig.Cleanup();
+            catch (TerminatingException)
+            {
+                Debug.Log("Socket terminated.");
+            }
+            finally
+            {
+                socket.Dispose();
+                NetMQConfig.Cleanup();
+            }
         }
     }
 
@@ -183,11 +193,11 @@ public class MazeEditorProxy : MonoBehaviour
     /// </summary>
     private void ClearSocket()
     {
-        socket.Close();
         NetMQConfig.Cleanup();
-    }
-
-    protected virtual void OnMazeUpdateEvent()
-    {
+        terminated = true;
+#if UNITY_EDITOR
+        // It works!
+        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload -= ClearSocket;
+#endif
     }
 }
