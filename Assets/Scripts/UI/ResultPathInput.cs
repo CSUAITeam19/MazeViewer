@@ -15,7 +15,7 @@ namespace MazeViewer.UI
 
         public void UpdateResultPath(Container container)
         {
-            container.UpdateResultPath(input.text);
+            ConfigManager.instance.UpdateResultPath(input.text);
         }
     }
 

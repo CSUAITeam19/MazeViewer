@@ -17,7 +17,7 @@ namespace MazeViewer.UI
 
         public void UpdateMazePath(Container container)
         {
-            container.UpdateMazePath(input.text);
+            ConfigManager.instance.UpdateMazePath(input.text);
         }
     }
 

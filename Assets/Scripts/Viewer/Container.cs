@@ -140,6 +140,7 @@ namespace MazeViewer.Viewer
             {
                 var tempObject = mergedMeshes.GetChild(i).gameObject;
                 tempObject.GetComponent<MeshFilter>().mesh = new Mesh();
+                // TODO: recycle gameObject
                 Destroy(tempObject);
             }
         }
@@ -174,6 +175,16 @@ namespace MazeViewer.Viewer
         public void Undo()
         {
             chain.Undo();
+        }
+
+        /// <summary>
+        /// 重载迷宫
+        /// <para>等价于先调用ClearMaze();后调用LoadMaze();</para>
+        /// </summary>
+        public void ReloadMaze()
+        {
+            ClearMaze();
+            LoadMaze();
         }
 
         public void UpdateMazePath(string path) => mazePath = path;

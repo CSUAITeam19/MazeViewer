@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using MazeViewer.Viewer;
 using NetMQ;
 using NetMQ.Sockets;
 using UnityEngine;
@@ -47,19 +48,21 @@ public class MazeEditorProxy : MonoBehaviour
     private bool terminated = false;
 
     private ConcurrentQueue<MazeEditorEvent> eventQueue = new ConcurrentQueue<MazeEditorEvent>();
+    private static MazeEditorProxy _instance;
 
-    public static MazeEditorProxy instance = null;
+    public static MazeEditorProxy instance => _instance;
+
     public event Action<MazeEditorEvent> editorHandShakeEvent;
     public event Action<MazeEditorEvent> mazeUpdateEvent;
     public event Action<MazeEditorEvent> mazePathChangeEvent;
     public event Action<MazeEditorEvent> resultPathChangeEvent;
 
-    private void Awake()
+    private void Start()
     {
         // 建立单例
-        if(instance == null)
+        if(_instance == null)
         {
-            instance = this;
+            _instance = this;
         }
         else
         {
@@ -69,8 +72,7 @@ public class MazeEditorProxy : MonoBehaviour
         // 初始化AsyncIO
         AsyncIO.ForceDotNet.Force();
         // 建立socket并启动监听线程
-        // TODO: 配置项: 连接的目标地址
-        socket = new RequestSocket(">tcp://localhost:25565");
+        socket = new RequestSocket(ConfigManager.instance.Current.mazeEditorAddress);
         sockeThread = new Thread(SocketLoop);
         sockeThread.Start();
 
@@ -78,8 +80,7 @@ public class MazeEditorProxy : MonoBehaviour
 
     private void Update()
     {
-        MazeEditorEvent editorEvent;
-        while(eventQueue.TryDequeue(out editorEvent))
+        while(eventQueue.TryDequeue(out var editorEvent))
         {
             switch(editorEvent.eventType)
             {
