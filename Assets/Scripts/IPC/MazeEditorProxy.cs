@@ -96,9 +96,6 @@ public class MazeEditorProxy : MonoBehaviour
                 case MazeEditorEventType.ResultPathChange:
                     resultPathChangeEvent?.Invoke(editorEvent);
                     break;
-                case MazeEditorEventType.Unknown:
-                    Debug.LogError("Unknown msg!");
-                    break;
             }
         }
     }
@@ -130,17 +127,17 @@ public class MazeEditorProxy : MonoBehaviour
         MazeEditorEventType eventType;
         switch(head)
         {
-            // TODO: change header standard to unify name style
+            // TODO: allow result update separately from maze update
             case "Maze_Server":
                 eventType = MazeEditorEventType.HandShake;
                 break;
-            case "Request_update":
+            case "update":
                 eventType = MazeEditorEventType.Update;
                 break;
-            case "path_maze":
+            case "maze_path":
                 eventType = MazeEditorEventType.MazePathChange;
                 break;
-            case "answer":
+            case "answer_path":
                 eventType = MazeEditorEventType.ResultPathChange;
                 break;
             default:
