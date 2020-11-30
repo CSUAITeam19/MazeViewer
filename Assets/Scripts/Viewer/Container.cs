@@ -148,17 +148,17 @@ namespace MazeViewer.Viewer
         private void Update()
         {
 #if UNITY_EDITOR
-            if(Input.GetKeyDown(KeyCode.Z))
+            if(Input.GetKey(KeyCode.Z))
 #else
-            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z))
+            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Z))
 #endif
             {
                 Undo();
             }
 #if UNITY_EDITOR
-            if(Input.GetKeyDown(KeyCode.Y))
+            if(Input.GetKey(KeyCode.Y))
 #else
-            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Y))
+            if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Y))
 #endif
             {
                 Redo();

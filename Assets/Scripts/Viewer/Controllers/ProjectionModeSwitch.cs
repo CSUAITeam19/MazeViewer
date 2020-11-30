@@ -36,7 +36,7 @@ namespace MazeViewer.Viewer.Control
                 Vector3 posTemp = transform.position;
                 if (posTemp.y < 0) transform.position = new Vector3(posTemp.x, 5.0f, posTemp.z);
                 // 往下看
-                transform.LookAt(transform.position - Vector3.up, Vector3.forward);
+                transform.LookAt(transform.position - Vector3.up + Vector3.forward * 0.01f, Vector3.forward);
             }
             else
             {
