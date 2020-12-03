@@ -40,94 +40,128 @@ namespace MazeViewer.Maze
             }
             return tempResult;
         }
+
         /// <summary>
         /// 从文件中读取搜索过程
+        /// <para>假设文件可打开, 但尽可能兼容文件格式的微小错误</para>
         /// </summary>
         /// <param name="path">文件路径</param>
         /// <param name="cellList">实现搜索操作显示的单元的列表</param>
+        /// <param name="way">输出的路径</param>
         /// <returns></returns>
-        public static OperationChain ReadSearchDataFromFile(string path, List<List<ICellObj>> cellList, Vector2Int exitPos)
+        public static OperationChain ReadSearchDataFromFile(string path, List<List<ICellObj>> cellList,
+            out List<Vector2Int> way)
         {
             StringReader stringReader;
-            try
-            {
-                stringReader = new StringReader(File.ReadAllText(path));
-            }
-            catch (FileNotFoundException)
-            {
-                Debug.LogError("Search file not found!");
-                return new OperationChain();
-            }
-            // 建立一个H值数组
-            List<List<int>> hList = new List<List<int>>();
-            for(int i = 0; i< cellList.Count; i++)
-            {
-                hList.Add(new List<int>());
-                for(int j = 0; j < cellList[0].Count; j++)
-                {
-                    hList[i].Add((Mathf.Abs(i - exitPos.x) + Mathf.Abs(j - exitPos.y)) * 10);
-                }
-            }
-            
+            //try
+            //{
+            //    stringReader = new StringReader(File.ReadAllText(path));
+            //}
+            //catch (FileNotFoundException)
+            //{
+            //    Debug.LogError("Search file not found!");
+            //    return new OperationChain();
+            //}
             var result = new OperationChain();
-
-            // parser--------------------------
-            string lineStr;
-            while((lineStr = stringReader.ReadLine()) != null)
+            using(stringReader = new StringReader(File.ReadAllText(path)))
             {
-                var arguments = lineStr.Split(' ');
-                var metaOperCount = int.Parse(arguments[1]);
-                var stepOperation = new StepOperation();
-                for(int i = 0; i < metaOperCount; i++)
+                // parser--------------------------
+                // 读取H值矩阵
+                List<List<int>> hList = new List<List<int>>();
+                for(int i = 0; i < cellList.Count; i++)
                 {
-                    // read one line of meta operation
-                    var operArg = new List<string>(stringReader.ReadLine().Split(' '));
-                    operArg.RemoveAll(string.IsNullOrEmpty);
-
-                    int row = int.Parse(operArg[1]);
-                    int col = int.Parse(operArg[2]);
-                    int cost = int.Parse(operArg[3]);
-                    int h = hList[row][col];
-                    switch (operArg[0])
+                    hList.Add(new List<int>());
+                    List<string> splited = new List<string>(stringReader.ReadLine().Split(' '));
+                    splited.RemoveAll(string.IsNullOrEmpty);
+                    for(int j = 0; j < cellList[0].Count; j++)
                     {
-                        case "add":
-                            stepOperation.Add(MetaSearchOperationFactory.MakeOpenOperation(
-                                cellList[row][col],
-                                cost,
-                                h)
-                            );
-                            break;
-                        case "vis":
-                            stepOperation.Add(MetaSearchOperationFactory.MakeCloseOperation(
-                                cellList[row][col],
-                                cost,
-                                h)
-                            );
-                            break;
-                        case "cost":
-                            stepOperation.Add(MetaSearchOperationFactory.MakeCostRefreshOperation(
-                                cellList[row][col],
-                                cost)
-                            );
-                            break;
-                    }
+                        try
+                        {
+                            hList[i].Add(int.Parse(splited[j]));
+                        }
+                        catch
+                        {
+                            // exit this loop
+                            Debug.LogError($"Can not parse h matrix line on ({i}, {j})");
+                            // add range to fit the size
+                            hList[i].AddRange(new int[cellList[0].Count - hList[i].Count]);
+                        }
 
+                    }
                 }
-                // add to result chain
-                result.AddAndExcuteOperation(stepOperation, false);
-                // Debug.Log("Step read.");
+
+                string lineStr;
+                while(!(lineStr = stringReader.ReadLine()).StartsWith("way"))
+                {
+                    var arguments = lineStr.Split(' ');
+                    var metaOperCount = int.Parse(arguments[1]);
+                    var stepOperation = new StepOperation();
+                    for(int i = 0; i < metaOperCount; i++)
+                    {
+                        // read one line of meta operation
+                        var operArg = new List<string>(stringReader.ReadLine().Split(' '));
+                        operArg.RemoveAll(string.IsNullOrEmpty);
+
+                        int row = int.Parse(operArg[1]);
+                        int col = int.Parse(operArg[2]);
+                        int cost = int.Parse(operArg[3]);
+                        int h = hList[row][col];
+                        switch(operArg[0])
+                        {
+                            case "add":
+                                stepOperation.Add(MetaSearchOperationFactory.MakeOpenOperation(
+                                    cellList[row][col],
+                                    cost,
+                                    h)
+                                );
+                                break;
+                            case "vis":
+                                stepOperation.Add(MetaSearchOperationFactory.MakeCloseOperation(
+                                    cellList[row][col],
+                                    cost,
+                                    h)
+                                );
+                                break;
+                            case "cost":
+                                stepOperation.Add(MetaSearchOperationFactory.MakeCostRefreshOperation(
+                                    cellList[row][col],
+                                    cost)
+                                );
+                                break;
+                        }
+
+                    }
+                    // add to result chain
+                    result.AddAndExcuteOperation(stepOperation, false);
+                }
+                // read way points are there
+                way = new List<Vector2Int>();
+                int wayCount = 0;
+                try
+                {
+                    wayCount = int.Parse(lineStr.Split(' ')[1]);
+                }
+                catch(IndexOutOfRangeException)
+                {
+                    Debug.LogError("Can not parse way count!");
+                }
+                for(int i = 0; i < wayCount; i++)
+                {
+                    try
+                    {
+                        var splited = stringReader.ReadLine().Split(' ');
+                        way.Add(new Vector2Int(int.Parse(splited[0]), int.Parse(splited[1])));
+                    }
+                    catch
+                    {
+                        way.Add(Vector2Int.zero);
+                        Debug.LogError($"Can not parse way on {i}");
+                    }
+                }
+                // end of parser-------------------
             }
-            // end of parser-------------------
-            stringReader.Close();
             return result;
         }
-        ///// <summary>
-        ///// 格式错误异常
-        ///// </summary>
-        //public class FormatException : Exception
-        //{
-
-        //}
     }
 }
 

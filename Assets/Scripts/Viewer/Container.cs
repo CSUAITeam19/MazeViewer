@@ -124,8 +124,11 @@ namespace MazeViewer.Viewer
 
             // merge all walls
             StartCoroutine(MergeMesh());
+            // read result
+            // TODO: implement way showing
+            List<Vector2Int> way;
             chain = MazeIO.ReadSearchDataFromFile(resultPath,
-                cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), exitPos);
+                cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
             chain.UndoAll();
         }
 
