@@ -1,5 +1,5 @@
 {
     "mazeEditorAddress": ">tcp://localhost:25565",
-    "mazePath": "D:\\Repos\\Qt\\MazeCracker\\TestConsole\\maze.txt",
-    "resultPath": "D:\\Repos\\Qt\\MazeCracker\\TestConsole\\result.txt"
+    "mazePath": "D:\\Repos\\Qt\\MazeAlgorithm\\Greedy Best-First Search\\maze.txt",
+    "resultPath": "D:\\Repos\\Qt\\MazeAlgorithm\\Greedy Best-First Search\\answer.txt"
 }

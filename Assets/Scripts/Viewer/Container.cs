@@ -21,6 +21,7 @@ namespace MazeViewer.Viewer
         public Material wallMaterial;
         [SerializeField] private Transform mergedMeshes = default;
         [SerializeField] private GameObject rendererPrefeb = default;
+        [SerializeField] private PathDrawer pathDrawer = default;
         private Vector3 size;
         private Vector2Int exitPos;
         private OperationChain chain;
@@ -125,10 +126,10 @@ namespace MazeViewer.Viewer
             // merge all walls
             StartCoroutine(MergeMesh());
             // read result
-            // TODO: implement way showing
             List<Vector2Int> way;
             chain = MazeIO.ReadSearchDataFromFile(resultPath,
                 cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
+            chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
             chain.UndoAll();
         }
 
