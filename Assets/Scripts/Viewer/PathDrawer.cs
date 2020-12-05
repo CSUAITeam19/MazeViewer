@@ -67,7 +67,7 @@ namespace MazeViewer.Viewer
                 List<Vector3> worldPath = path.ConvertAll(intPos =>
                         baseTransform.localToWorldMatrix.MultiplyPoint(new Vector3(intPos.x, 0, intPos.y))
                     );
-                worldPath.ForEach(pos => Debug.Log($"converted pos: {pos}"));
+                // worldPath.ForEach(pos => Debug.Log($"converted pos: {pos}"));
                 worldPath[0] += Vector3.up * 0.1f;
                 worldPath[worldPath.Count - 1] -= Vector3.up * .1f;
                 line.positionCount = worldPath.Count;

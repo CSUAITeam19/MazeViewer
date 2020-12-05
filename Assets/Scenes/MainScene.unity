@@ -1599,7 +1599,7 @@ LineRenderer:
   - {x: 1, y: 0, z: 4}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.5
+    widthMultiplier: 0.25
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -1647,7 +1647,7 @@ LineRenderer:
     numCornerVertices: 16
     numCapVertices: 32
     alignment: 1
-    textureMode: 0
+    textureMode: 3
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 1
@@ -2234,6 +2234,7 @@ GameObject:
   - component: {fileID: 1352632650}
   - component: {fileID: 1352632652}
   - component: {fileID: 1352632651}
+  - component: {fileID: 1352632653}
   m_Layer: 5
   m_Name: StatusBar
   m_TagString: Untagged
@@ -2249,7 +2250,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1352632649}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 403543808}
@@ -2258,7 +2259,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 674, y: 20.3}
+  m_SizeDelta: {x: 674, y: 500.23}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1352632651
 MonoBehaviour:
@@ -2273,26 +2274,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.94218135, b: 0, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 3}
-    m_FontSize: 14
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 18
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 6
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u72B6\u6001\u680F"
+  m_Text: "\u72B6\u6001\u680F\n1\n2\n3\n<color=#ff0000>4</color>"
 --- !u!222 &1352632652
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2301,6 +2302,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1352632649}
   m_CullTransparentMesh: 0
+--- !u!114 &1352632653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352632649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79c5effac1e7de2488fad5fd0f8b4e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisText: {fileID: 1352632651}
+  maxInfoCount: 4
+  infoLifeTime: 2.7
 --- !u!1 &1421282322
 GameObject:
   m_ObjectHideFlags: 0

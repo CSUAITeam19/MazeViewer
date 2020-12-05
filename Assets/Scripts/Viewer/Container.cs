@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using MazeViewer.Maze;
+using MazeViewer.UI;
 using Unitilities;
 using UnityEngine.Serialization;
 
@@ -131,6 +132,7 @@ namespace MazeViewer.Viewer
                 cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
             chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
             chain.UndoAll();
+            StatusInfo.Instance.PrintInfo("迷宫已加载");
         }
 
         /// <summary>
@@ -147,6 +149,7 @@ namespace MazeViewer.Viewer
                 // TODO: recycle gameObject
                 Destroy(tempObject);
             }
+            StatusInfo.Instance.PrintInfo("迷宫已清除");
         }
 
         private void Update()
