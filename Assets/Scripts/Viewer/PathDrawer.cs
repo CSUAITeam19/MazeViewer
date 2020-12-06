@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unitilities;
@@ -53,7 +53,7 @@ namespace MazeViewer.Viewer
             {
                 baseTransform = transform;
             }
-            HidePath();
+            // HidePath();
         }
 
         /// <summary>

@@ -1590,13 +1590,28 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: -0.11, z: 0}
+  - {x: 0, y: 0.1, z: 0}
   - {x: 1, y: 0, z: 0}
-  - {x: 2, y: 0, z: 0}
-  - {x: 2, y: 0, z: 1}
-  - {x: 2, y: 0, z: 2}
-  - {x: 1, y: 0, z: 3}
-  - {x: 1, y: 0, z: 4}
+  - {x: 3, y: 0, z: 5}
+  - {x: 5, y: 0, z: 0}
+  - {x: 7, y: 0, z: 5}
+  - {x: 9, y: 0, z: 0}
+  - {x: 11, y: 0, z: 5}
+  - {x: 13, y: 0, z: 0}
+  - {x: 10, y: 0, z: 2.5}
+  - {x: 12, y: 0, z: 2.5}
+  - {x: 14, y: 0, z: 5}
+  - {x: 18, y: 0, z: 5}
+  - {x: 14, y: 0, z: 0}
+  - {x: 18, y: 0, z: 0}
+  - {x: 24, y: 0, z: 5}
+  - {x: 20, y: 0, z: 5}
+  - {x: 20, y: 0, z: 0}
+  - {x: 24, y: 0, z: 0}
+  - {x: 20, y: 0, z: 2.5}
+  - {x: 24, y: 0, z: 2.5}
+  - {x: 24, y: 0, z: -1}
+  - {x: 0, y: -0.1, z: -1}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.25
@@ -2293,7 +2308,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u72B6\u6001\u680F\n1\n2\n3\n<color=#ff0000>4</color>"
+  m_Text: StatusBar
 --- !u!222 &1352632652
 CanvasRenderer:
   m_ObjectHideFlags: 0

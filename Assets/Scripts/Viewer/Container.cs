@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -132,7 +132,7 @@ namespace MazeViewer.Viewer
                 cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
             chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
             chain.UndoAll();
-            StatusInfo.Instance.PrintInfo("迷宫已加载");
+            pathDrawer.HidePath();
         }
 
         /// <summary>
