@@ -165,6 +165,7 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void ClearMaze()
         {
+            chain.UndoAll();
             cellFactory.RecycleAll();
             // 清除所有生成的网格
             for(int i = 0; i < mergedMeshes.childCount; i++)
