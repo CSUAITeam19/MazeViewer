@@ -110,11 +110,11 @@ namespace MazeViewer.Viewer
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintInfo($"无法打开路径为\"{mazePath}\"的迷宫文件!".AddColor(Color.red));
+                StatusInfo.Instance.PrintError($"无法打开路径为\"{mazePath}\"的迷宫文件!");
             }
             catch(Exception e)
             {
-                StatusInfo.Instance.PrintInfo($"加载迷宫时发生未知错误:{e}".AddColor(Color.red));
+                StatusInfo.Instance.PrintError($"加载迷宫时发生未知错误:{e}");
             }
             // return if empty
             if(maze.Count < 1 || maze[0].Count < 1)
@@ -148,11 +148,11 @@ namespace MazeViewer.Viewer
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintInfo($"无法打开路径为\"{mazePath}\"的搜索文件!".AddColor(Color.red));
+                StatusInfo.Instance.PrintError($"无法打开路径为\"{mazePath}\"的搜索文件!");
             }
             catch (Exception)
             {
-                StatusInfo.Instance.PrintInfo("加载搜索数据时出现未知错误!".AddColor(Color.red));
+                StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
             chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
             chain.UndoAll();

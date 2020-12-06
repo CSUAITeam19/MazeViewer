@@ -98,5 +98,14 @@ namespace MazeViewer.UI
             StartCoroutine(timer);
             RePrintInfo();
         }
+
+        /// <summary>
+        /// 打印错误, 显示为红色
+        /// </summary>
+        /// <param name="error"></param>
+        public void PrintError(string error)
+        {
+            PrintInfo(error.AddColor(Color.red));
+        }
     }
 }

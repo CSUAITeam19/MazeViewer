@@ -12,7 +12,7 @@ namespace MazeViewer.UI
     {
         public void ExitFocus()
         {
-            if(EventSystem.current.currentSelectedGameObject == gameObject)
+            if(EventSystem.current.currentSelectedGameObject == gameObject && !EventSystem.current.alreadySelecting)
             {
                 EventSystem.current.SetSelectedGameObject(null);
             }
