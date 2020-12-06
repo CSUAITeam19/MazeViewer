@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using MazeViewer.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,14 +25,24 @@ namespace MazeViewer.Viewer
             /// 搜索结果文件的路径
             /// </summary>
             public string resultPath;
-            public Config(string mazeEditorAddress, string mazePath, string resultPath)
+            /// <summary>
+            /// 最大信息数量
+            /// </summary>
+            public int maxInfoCount;
+            /// <summary>
+            /// 信息显示时间
+            /// </summary>
+            public float infoLifeTime;
+            public Config(string mazeEditorAddress, string mazePath, string resultPath, int maxInfoCount, float infoLifeTime)
             {
                 this.mazeEditorAddress = mazeEditorAddress;
                 this.mazePath = mazePath;
                 this.resultPath = resultPath;
+                this.maxInfoCount = maxInfoCount;
+                this.infoLifeTime = infoLifeTime;
             }
             public static Config defaultConfig = new Config(">tcp://localhost:25565", 
-                "../maze.txt", "../answer.txt");
+                "../maze.txt", "../answer.txt",6,3.0f);
         }
 
         private string cfgPath = "./Config.json";

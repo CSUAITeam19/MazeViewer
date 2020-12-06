@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using MazeViewer.UI;
 using MazeViewer.Viewer;
 using NetMQ;
 using NetMQ.Sockets;
@@ -97,6 +98,8 @@ public class MazeEditorProxy : MonoBehaviour
                     resultPathChangeEvent?.Invoke(editorEvent);
                     break;
             }
+
+            StatusInfo.Instance.PrintInfo($"获取类型为{editorEvent.eventType}的套接字信息:{editorEvent.data}");
         }
     }
 
@@ -145,7 +148,6 @@ public class MazeEditorProxy : MonoBehaviour
                 eventType = MazeEditorEventType.Unknown;
                 break;
         }
-
         eventQueue.Enqueue(new MazeEditorEvent(eventType, data));
     }
 

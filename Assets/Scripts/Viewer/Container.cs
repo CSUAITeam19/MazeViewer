@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +25,7 @@ namespace MazeViewer.Viewer
         [SerializeField] private PathDrawer pathDrawer = default;
         private Vector3 size;
         private Vector2Int exitPos;
-        private OperationChain chain;
+        private OperationChain chain = new OperationChain();
 
         private void CombineWithNewMesh(MeshFilter target, List<CombineInstance> instances)
         {
@@ -103,7 +103,19 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void LoadMaze()
         {
-            var maze = MazeIO.ReadFromFile(mazePath, out exitPos);
+            List<List<MazeState>> maze = new List<List<MazeState>>();
+            try
+            {
+                maze = MazeIO.ReadFromFile(mazePath, out exitPos);
+            }
+            catch (FileNotFoundException)
+            {
+                StatusInfo.Instance.PrintInfo($"无法打开路径为\"{mazePath}\"的迷宫文件!".AddColor(Color.red));
+            }
+            catch(Exception e)
+            {
+                StatusInfo.Instance.PrintInfo($"加载迷宫时发生未知错误:{e}".AddColor(Color.red));
+            }
             // return if empty
             if(maze.Count < 1 || maze[0].Count < 1)
                 return;
@@ -127,12 +139,25 @@ namespace MazeViewer.Viewer
             // merge all walls
             StartCoroutine(MergeMesh());
             // read result
-            List<Vector2Int> way;
-            chain = MazeIO.ReadSearchDataFromFile(resultPath,
-                cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
+            List<Vector2Int> way = new List<Vector2Int>();
+            StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
+            try
+            {
+                chain = MazeIO.ReadSearchDataFromFile(resultPath,
+                    cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
+            }
+            catch (FileNotFoundException)
+            {
+                StatusInfo.Instance.PrintInfo($"无法打开路径为\"{mazePath}\"的搜索文件!".AddColor(Color.red));
+            }
+            catch (Exception)
+            {
+                StatusInfo.Instance.PrintInfo("加载搜索数据时出现未知错误!".AddColor(Color.red));
+            }
             chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
             chain.UndoAll();
             pathDrawer.HidePath();
+            StatusInfo.Instance.PrintInfo("迷宫数据已加载");
         }
 
         /// <summary>
@@ -149,7 +174,7 @@ namespace MazeViewer.Viewer
                 // TODO: recycle gameObject
                 Destroy(tempObject);
             }
-            StatusInfo.Instance.PrintInfo("迷宫已清除");
+            StatusInfo.Instance.PrintInfo("迷宫已初始化");
         }
 
         private void Update()

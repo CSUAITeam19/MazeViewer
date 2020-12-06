@@ -14,15 +14,11 @@ namespace MazeViewer.Maze
         public static List<List<MazeState>> ReadFromFile(string path, out Vector2Int exitPos)
         {
             StringReader stringReader;
-            try
-            {
-                stringReader = new StringReader(File.ReadAllText(path));
-            }
-            catch(FileNotFoundException)
-            {
-                exitPos = Vector2Int.zero;
-                return new List<List<MazeState>>();
-            }
+            exitPos = new Vector2Int(1,0);
+            
+            // may throw FileNotFoundException
+            stringReader = new StringReader(File.ReadAllText(path));
+            
             var s = stringReader.ReadLine().Split(' ');
             var col = int.Parse(s[0]);
             var row = int.Parse(s[1]);

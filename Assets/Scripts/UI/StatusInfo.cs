@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MazeViewer.Viewer;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace MazeViewer.UI
 {
-    public static class RichTextBuilder
-    {
-        public static string AddColor(this string str, Color color)
-        {
-            return $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{str}</color>";
-        }
-    }
     /// <summary>
     /// 状态信息
     /// <para>单例</para>
@@ -22,8 +16,6 @@ namespace MazeViewer.UI
         private List<string> infoList = new List<string>();
         private List<IEnumerator> timerList = new List<IEnumerator>();
         [SerializeField] private Text thisText = default;
-        [Range(1,32)] [SerializeField] private int maxInfoCount = 4; 
-        [Range(0,60)] [SerializeField] private float infoLifeTime = 3.0f;
         public static StatusInfo Instance { get; private set; }
 
         /// <summary>
@@ -31,16 +23,7 @@ namespace MazeViewer.UI
         /// </summary>
         public int MaxInfoCount
         {
-            get => maxInfoCount;
-            set
-            {
-                if (value < 1)
-                {
-                    value = 1;
-                    Debug.LogError("MaxInfoCount cannot be less than 1!");
-                }
-                maxInfoCount = value;
-            }
+            get => ConfigManager.instance.Current.maxInfoCount;
         }
 
         /// <summary>
@@ -48,16 +31,7 @@ namespace MazeViewer.UI
         /// </summary>
         public float InfoLifeTime
         {
-            get => infoLifeTime;
-            set
-            {
-                if (value < 0)
-                {
-                    value = 3.0f;
-                    Debug.LogError("InfoLifeTime cannot be less than 0!");
-                }
-                infoLifeTime = value;
-            }
+            get => ConfigManager.instance.Current.infoLifeTime;
         }
 
         /// <summary>
@@ -66,7 +40,7 @@ namespace MazeViewer.UI
         /// <returns></returns>
         private IEnumerator InfoKiller()
         {
-            yield return new WaitForSeconds(infoLifeTime);
+            yield return new WaitForSeconds(InfoLifeTime);
             if (infoList.Count > 0) infoList.RemoveAt(0);
             RePrintInfo();
         }
@@ -113,7 +87,7 @@ namespace MazeViewer.UI
         {
             infoList.Add(info);
             // 溢出则去除第一个
-            if(infoList.Count > maxInfoCount)
+            if(infoList.Count > MaxInfoCount)
             {
                 infoList.RemoveAt(0);
                 StopCoroutine(timerList[0]);

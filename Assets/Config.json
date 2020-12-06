@@ -1,5 +1,7 @@
 {
     "mazeEditorAddress": ">tcp://localhost:25565",
     "mazePath": "D:\\Repos\\Qt\\MazeAlgorithm\\Greedy Best-First Search\\maze.txt",
-    "resultPath": "D:\\Repos\\Qt\\MazeAlgorithm\\Greedy Best-First Search\\answer.txt"
+    "resultPath": "D:\\Repos\\Qt\\MazeAlgorithm\\Greedy Best-First Search\\answer.txt",
+    "maxInfoCount": 6,
+    "infoLifeTime": 3.0
 }
