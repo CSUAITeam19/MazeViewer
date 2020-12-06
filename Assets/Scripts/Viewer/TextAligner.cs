@@ -14,7 +14,7 @@ namespace MazeViewer.Viewer
         /// <returns></returns>
         private Vector3 ToAlignDirection()
         {
-            Vector3 sight = Camera.main.transform.forward;
+            Vector3 sight = Camera.main.transform.up;
             if(Mathf.Abs(sight.x) > Mathf.Abs(sight.z))
             {
                 return new Vector3(sight.x > 0 ? 1 : -1, 0, 0);
