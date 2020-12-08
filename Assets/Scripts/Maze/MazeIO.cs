@@ -20,8 +20,8 @@ namespace MazeViewer.Maze
             stringReader = new StringReader(File.ReadAllText(path));
             
             var s = stringReader.ReadLine().Split(' ');
-            var col = int.Parse(s[0]);
-            var row = int.Parse(s[1]);
+            var row = int.Parse(s[0]);
+            var col = int.Parse(s[1]);
             var tempResult = new List<List<MazeState>>();
             exitPos =Vector2Int.zero;
             for(int i = 0; i < row; i++)
