@@ -15,6 +15,7 @@ namespace MazeViewer.Viewer
         [SerializeField] private List<List<GameObject>> cellObjs;
 
         [SerializeField] private CellFactory cellFactory = default;
+        [SerializeField] private ProgressMgr progressMgr = default;
         public float scale;
         [FormerlySerializedAs("path")] public string mazePath = "";
         public string resultPath = "";
@@ -25,7 +26,6 @@ namespace MazeViewer.Viewer
         [SerializeField] private PathDrawer pathDrawer = default;
         private Vector3 size;
         private Vector2Int exitPos;
-        private OperationChain chain = new OperationChain();
 
         private void CombineWithNewMesh(MeshFilter target, List<CombineInstance> instances)
         {
@@ -139,6 +139,7 @@ namespace MazeViewer.Viewer
             // merge all walls
             StartCoroutine(MergeMesh());
             // read result
+            OperationChain chain = new OperationChain();
             List<Vector2Int> way = new List<Vector2Int>();
             StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
             try
@@ -155,7 +156,8 @@ namespace MazeViewer.Viewer
                 StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
             chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
-            chain.UndoAll();
+            progressMgr.LoadOperationChain(chain);
+            progressMgr.BackToBegin();
             pathDrawer.HidePath();
             StatusInfo.Instance.PrintInfo("迷宫数据已加载");
         }
@@ -165,7 +167,7 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void ClearMaze()
         {
-            chain.UndoAll();
+            progressMgr.BackToBegin();
             cellFactory.RecycleAll();
             // 清除所有生成的网格
             for(int i = 0; i < mergedMeshes.childCount; i++)
@@ -186,7 +188,7 @@ namespace MazeViewer.Viewer
             if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Z))
 #endif
             {
-                Undo();
+                progressMgr.BackStep();
             }
 #if UNITY_EDITOR
             if(Input.GetKey(KeyCode.Y))
@@ -194,20 +196,20 @@ namespace MazeViewer.Viewer
             if((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Y))
 #endif
             {
-                Redo();
+                progressMgr.NextStep();
             }
         }
 
         [ContextMenu("Redo")]
         public void Redo()
         {
-            chain.Redo();
+            progressMgr.BackStep();
         }
 
         [ContextMenu("Undo")]
         public void Undo()
         {
-            chain.Undo();
+            progressMgr.NextStep();
         }
 
         /// <summary>
