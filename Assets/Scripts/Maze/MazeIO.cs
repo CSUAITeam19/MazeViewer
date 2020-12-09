@@ -100,7 +100,8 @@ namespace MazeViewer.Maze
 
                         int row = int.Parse(operArg[1]);
                         int col = int.Parse(operArg[2]);
-                        int cost = int.Parse(operArg[3]);
+                        int cost = operArg.Count > 3 ? int.Parse(operArg[3]) : 0;
+                        
                         int h = hList[row][col];
                         switch(operArg[0])
                         {
@@ -123,6 +124,11 @@ namespace MazeViewer.Maze
                                     cellList[row][col],
                                     cost)
                                 );
+                                break;
+                            case "del":
+                                stepOperation.Add(MetaSearchOperationFactory.MakeDelOperation(
+                                    cellList[row][col]));
+                                Debug.Log("Del operation");
                                 break;
                         }
 
