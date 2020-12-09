@@ -55,6 +55,12 @@ namespace MazeViewer.Viewer
             data.cost = cost;
             return new MetaSearchOperation(target, data);
         }
+        public static MetaSearchOperation MakeDelOperation(ICellObj target)
+        {
+            CellSearchData data = target.SearchData;
+            data.state = SearchState.Idle;
+            return new MetaSearchOperation(target, data);
+        }
     }
     /// <summary>
     /// 搜索步骤: 由若干搜索元操作组成

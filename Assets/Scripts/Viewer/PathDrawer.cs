@@ -62,12 +62,11 @@ namespace MazeViewer.Viewer
         /// <param name="path">需显示的路径, 以Vector2Int为元素</param>
         public void ShowPath(List<Vector2Int> path)
         {
-            if(line != null)
+            if(line != null && path.Count > 0)
             {
                 List<Vector3> worldPath = path.ConvertAll(intPos =>
                         baseTransform.localToWorldMatrix.MultiplyPoint(new Vector3(intPos.x, 0, intPos.y))
                     );
-                // worldPath.ForEach(pos => Debug.Log($"converted pos: {pos}"));
                 worldPath[0] += Vector3.up * 0.1f;
                 worldPath[worldPath.Count - 1] -= Vector3.up * .1f;
                 line.positionCount = worldPath.Count;
