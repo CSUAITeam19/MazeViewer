@@ -17,6 +17,8 @@ namespace MazeViewer.Viewer
         /// 上一次调用的位置
         /// </summary>
         private int lastCallPos;
+        private int playSpeed = 0;
+        [SerializeField] private int speedChangeScale = 2;
 
         /// <summary>
         /// 到达最后一步时调用
@@ -40,8 +42,30 @@ namespace MazeViewer.Viewer
 
         private void Awake()
         {
-            endEvent += () =>  StatusInfo.Instance.PrintInfo("搜索结束");
-            beginEvent += () => StatusInfo.Instance.PrintInfo("搜索开始");
+            endEvent += () =>
+            {
+                StatusInfo.Instance.PrintInfo("搜索结束");
+                playSpeed = 0;
+            };
+            
+            beginEvent += () =>
+            {
+                StatusInfo.Instance.PrintInfo("搜索开始");
+                playSpeed = 0;
+            };
+            
+        }
+
+        private void Update()
+        {
+            if(playSpeed > 0)
+            {
+                NextSteps(playSpeed);
+            }
+            if(playSpeed < 0)
+            {
+                BackSteps(-playSpeed);
+            }
         }
 
         private void CheckStepUpdate()
@@ -145,14 +169,38 @@ namespace MazeViewer.Viewer
         {
             if(target < CurrentStep)
             {
-                Debug.Log($"Going backward: from {CurrentStep} to {target}");
                 BackSteps(CurrentStep - target);
             }
             else if(target > CurrentStep)
             {
-                Debug.Log($"Going forward: from {CurrentStep} to {target}");
                 NextSteps(target - CurrentStep);
             }
+        }
+
+        /// <summary>
+        /// 向前播放加速, 若当前速度为负则立即设置为正
+        /// </summary>
+        public void ForwardPlaySpeedUp()
+        {
+            if (playSpeed <= 0) playSpeed = 1;
+            playSpeed *= speedChangeScale;
+        }
+
+        /// <summary>
+        /// 向后播放加速, 若当前速度为正则立即设置为负
+        /// </summary>
+        public void BackwardPlaySpeedUp()
+        {
+            if (playSpeed >= 0) playSpeed = -1;
+            playSpeed *= speedChangeScale;
+        }
+
+        /// <summary>
+        /// 停止自动播放
+        /// </summary>
+        public void StopPlay()
+        {
+            playSpeed = 0;
         }
     }
 
