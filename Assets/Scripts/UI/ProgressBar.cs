@@ -56,7 +56,7 @@ namespace MazeViewer.UI
         /// </summary>
         public void BarValueChangedEvent()
         {
-            progressMgr.JumpToStep((int) slider.value);
+            progressMgr.JumpToStep((int)slider.value);
         }
     }
 
