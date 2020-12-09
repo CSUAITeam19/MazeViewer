@@ -72,7 +72,7 @@ namespace MazeViewer.Viewer
         {
             if(chain.CurrentPos != lastCallPos)
             {
-                stepChangeEvent?.Invoke(chain.CurrentPos);
+                stepChangeEvent?.Invoke(CurrentStep);
                 if(chain.IsBegin)
                 {
                     beginEvent?.Invoke();
