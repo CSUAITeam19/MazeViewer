@@ -182,7 +182,11 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void ForwardPlaySpeedUp()
         {
-            if (playSpeed <= 0) playSpeed = 1;
+            if (playSpeed <= 0)
+            {
+                playSpeed = 1;
+                return;
+            }
             playSpeed *= speedChangeScale;
         }
 
@@ -191,7 +195,11 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void BackwardPlaySpeedUp()
         {
-            if (playSpeed >= 0) playSpeed = -1;
+            if (playSpeed >= 0)
+            {
+                playSpeed = -1;
+                return;
+            }
             playSpeed *= speedChangeScale;
         }
 
