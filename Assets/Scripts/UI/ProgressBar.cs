@@ -40,7 +40,7 @@ namespace MazeViewer.UI
         {
             slider.wholeNumbers = true;
             slider.minValue = 0;
-            slider.maxValue = progressMgr.CurrentStep;
+            slider.maxValue = progressMgr.StepCount;
         }
 
         /// <summary>

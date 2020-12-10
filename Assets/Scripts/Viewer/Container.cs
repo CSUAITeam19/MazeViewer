@@ -139,12 +139,12 @@ namespace MazeViewer.Viewer
             // merge all walls
             StartCoroutine(MergeMesh());
             // read result
-            OperationChain chain = new OperationChain();
+            List<IRecovableOperation> operations = new List<IRecovableOperation>();
             List<Vector2Int> way = new List<Vector2Int>();
             StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
             try
             {
-                chain = MazeIO.ReadSearchDataFromFile(resultPath,
+                operations = MazeIO.ReadSearchDataFromFile(resultPath,
                     cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
             }
             catch (FileNotFoundException)
@@ -155,8 +155,8 @@ namespace MazeViewer.Viewer
             {
                 StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
-            chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
-            progressMgr.LoadOperationChain(chain);
+            operations.Add(new PathDrawOperation(way, pathDrawer));
+            progressMgr.LoadOperationChain(new OperationChain(operations, -1));
             progressMgr.BackToBegin();
             pathDrawer.HidePath();
             StatusInfo.Instance.PrintInfo("迷宫数据已加载");

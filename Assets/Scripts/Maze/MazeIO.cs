@@ -45,7 +45,7 @@ namespace MazeViewer.Maze
         /// <param name="cellList">实现搜索操作显示的单元的列表</param>
         /// <param name="way">输出的路径</param>
         /// <returns></returns>
-        public static OperationChain ReadSearchDataFromFile(string path, List<List<ICellObj>> cellList,
+        public static List<IRecovableOperation> ReadSearchDataFromFile(string path, List<List<ICellObj>> cellList,
             out List<Vector2Int> way)
         {
             StringReader stringReader;
@@ -58,7 +58,7 @@ namespace MazeViewer.Maze
             //    Debug.LogError("Search file not found!");
             //    return new OperationChain();
             //}
-            var result = new OperationChain();
+            var operationList = new List<IRecovableOperation>();
             using(stringReader = new StringReader(File.ReadAllText(path)))
             {
                 // parser--------------------------
@@ -134,7 +134,7 @@ namespace MazeViewer.Maze
 
                     }
                     // add to result chain
-                    result.AddAndExcuteOperation(stepOperation, false);
+                    operationList.Add(stepOperation);
                 }
                 // read way points are there
                 way = new List<Vector2Int>();
@@ -162,7 +162,7 @@ namespace MazeViewer.Maze
                 }
                 // end of parser-------------------
             }
-            return result;
+            return operationList;
         }
     }
 }
