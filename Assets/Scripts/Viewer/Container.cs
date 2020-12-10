@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +43,7 @@ namespace MazeViewer.Viewer
 
         IEnumerator MergeMesh()
         {
+            var timeWatcher = System.Diagnostics.Stopwatch.StartNew();
             int meshMerged = 0;
             GameObject targetObj = Instantiate(rendererPrefeb, mergedMeshes);
             var targetRenderer = targetObj.GetComponent<MeshRenderer>();
@@ -89,13 +90,14 @@ namespace MazeViewer.Viewer
                     meshMerged = toAddInstances.Count;
                 }
                 toAddInstances.Clear();
-                if(Time.time - beginTime > 0.02)
+                // 超时则跳过这一帧
+                if(timeWatcher.ElapsedMilliseconds > 5)
                 {
-                    beginTime = Time.time;
+                    timeWatcher.Restart();
                     yield return null;
                 }
             }
-
+            StatusInfo.Instance.PrintInfo("迷宫场景已加载完毕");
         }
 
         /// <summary>
@@ -157,7 +159,6 @@ namespace MazeViewer.Viewer
             }
             operations.Add(new PathDrawOperation(way, pathDrawer));
             progressMgr.LoadOperationChain(new OperationChain(operations, -1));
-            progressMgr.BackToBegin();
             pathDrawer.HidePath();
             StatusInfo.Instance.PrintInfo("迷宫数据已加载");
         }
