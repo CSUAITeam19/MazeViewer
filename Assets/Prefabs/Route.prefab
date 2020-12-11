@@ -224,15 +224,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5589121338836783903, guid: 9c9b2cf531f85c8499892e9f0661c567,
+        type: 3}
+      propertyPath: availableDistance
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 8226842304164581159, guid: 9c9b2cf531f85c8499892e9f0661c567,
         type: 3}
       propertyPath: m_Name
       value: DataText
-      objectReference: {fileID: 0}
-    - target: {fileID: 8226842304164581159, guid: 9c9b2cf531f85c8499892e9f0661c567,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b2cf531f85c8499892e9f0661c567, type: 3}
