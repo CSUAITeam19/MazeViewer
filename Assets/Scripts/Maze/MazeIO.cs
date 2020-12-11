@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JetBrains.Annotations;
 using MazeViewer.Viewer;
 using Unitilities;
@@ -63,29 +64,33 @@ namespace MazeViewer.Maze
             {
                 // parser--------------------------
                 // 读取H值矩阵
-                List<List<int>> hList = new List<List<int>>();
+                // 读入到一个记录中间变量的二维列表中, 避免直接对物体操作
+                List<List<CellSearchData>> tempDataList = new List<List<CellSearchData>>();
                 for(int i = 0; i < cellList.Count; i++)
                 {
-                    hList.Add(new List<int>());
+                    tempDataList.Add(new List<CellSearchData>());
                     List<string> splited = new List<string>(stringReader.ReadLine().Split(' '));
                     splited.RemoveAll(string.IsNullOrEmpty);
                     for(int j = 0; j < cellList[0].Count; j++)
                     {
-                        try
+                        CellSearchData temp = CellSearchData.defaultData;
+                        
+                        if(int.TryParse(splited[j], out temp.h))
                         {
-                            hList[i].Add(int.Parse(splited[j]));
+                            tempDataList[i].Add(temp);
                         }
-                        catch
+                        else
                         {
                             // exit this loop
                             Debug.LogError($"Can not parse h matrix line on ({i}, {j})");
                             // add range to fit the size
-                            hList[i].AddRange(new int[cellList[0].Count - hList[i].Count]);
+                            tempDataList[i].AddRange(Enumerable.Repeat(CellSearchData.defaultData,
+                                cellList[i].Count - tempDataList[i].Count));
                         }
-
                     }
                 }
 
+                // 读取操作步骤
                 string lineStr;
                 while(!(lineStr = stringReader.ReadLine()).StartsWith("way"))
                 {
@@ -101,37 +106,28 @@ namespace MazeViewer.Maze
                         int row = int.Parse(operArg[1]);
                         int col = int.Parse(operArg[2]);
                         int cost = operArg.Count > 3 ? int.Parse(operArg[3]) : 0;
-                        
-                        int h = hList[row][col];
+
+                        var lastData = tempDataList[row][col];
+                        var nextData = lastData;
+                        nextData.cost = cost;
                         switch(operArg[0])
                         {
                             case "add":
-                                stepOperation.Add(MetaSearchOperationFactory.MakeOpenOperation(
-                                    cellList[row][col],
-                                    cost,
-                                    h)
-                                );
+                                nextData.state = SearchState.Opened;
                                 break;
                             case "vis":
-                                stepOperation.Add(MetaSearchOperationFactory.MakeCloseOperation(
-                                    cellList[row][col],
-                                    cost,
-                                    h)
-                                );
+                                nextData.state = SearchState.Closed;
                                 break;
                             case "cost":
-                                stepOperation.Add(MetaSearchOperationFactory.MakeCostRefreshOperation(
-                                    cellList[row][col],
-                                    cost)
-                                );
+                                // nothing
                                 break;
                             case "del":
-                                stepOperation.Add(MetaSearchOperationFactory.MakeDelOperation(
-                                    cellList[row][col]));
-                                Debug.Log("Del operation");
+                                nextData.state = SearchState.Idle;
                                 break;
                         }
-
+                        // add to stepOperation
+                        stepOperation.Add(new MetaSearchOperation(cellList[row][col], lastData,
+                            tempDataList[row][col] = nextData));
                     }
                     // add to result chain
                     operationList.Add(stepOperation);

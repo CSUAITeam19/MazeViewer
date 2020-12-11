@@ -17,6 +17,7 @@ namespace MazeViewer.Maze
     /// <summary>
     /// 一个单元上的搜索数据
     /// </summary>
+    [Serializable]
     public struct CellSearchData
     {
         /// <summary>
@@ -38,5 +39,9 @@ namespace MazeViewer.Maze
             this.h = h;
         }
         public static readonly CellSearchData defaultData = new CellSearchData(SearchState.Idle,0,0);
+        public override string ToString()
+        {
+            return $"State: {state}, cost: {cost}, h: {h}";
+        }
     }
 }
