@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4253781075285665526}
   - component: {fileID: 664227289642014596}
-  - component: {fileID: 7002792739753809658}
+  - component: {fileID: 7002856423270662628}
   m_Layer: 0
   m_Name: Route
   m_TagString: Untagged
@@ -46,11 +46,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d85bc88b49b1d41ab169c1f3c383e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorChanges: {fileID: 7002792739753809658}
+  materialChange: {fileID: 7002856423270662628}
   dataText: {fileID: 1479635404077420813}
   cost: {fileID: 4032027440340323166}
   h: {fileID: 6493194842665792896}
---- !u!114 &7002792739753809658
+  idleMaterial: {fileID: 2100000, guid: cc685b17bf2a9884b8f58db29bfea729, type: 2}
+  openMaterial: {fileID: 2100000, guid: a6f4cbb7c02b08742abc670fdacadee2, type: 2}
+  closedMaterial: {fileID: 2100000, guid: fa9ebd77b5ee86048843a4a5420f88fc, type: 2}
+--- !u!114 &7002856423270662628
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,12 +62,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7261544881884178033}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bf82fd277a27d14783f570e01bafa7c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f07d2b1e297e3b44927e6ca8acd8363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  duration: 0
   targetRenderer: {fileID: 4046980482493115363}
-  changeTime: 0.5
-  targetColor: {r: 0, g: 0, b: 0, a: 0}
+  targetMaterial: {fileID: 0}
 --- !u!1 &7492029469315225771
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,6 +228,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: DataText
+      objectReference: {fileID: 0}
+    - target: {fileID: 8226842304164581159, guid: 9c9b2cf531f85c8499892e9f0661c567,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c9b2cf531f85c8499892e9f0661c567, type: 3}
