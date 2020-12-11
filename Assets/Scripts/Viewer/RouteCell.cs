@@ -57,7 +57,6 @@ namespace MazeViewer.Viewer
             colorChanges.Stop();
             dataText.SetActive(false);
         }
-
         public override void UpdateSearchState(CellSearchData searchData)
         {
             if(searchData.state != this.searchData.state)

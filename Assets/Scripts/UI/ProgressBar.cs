@@ -14,6 +14,7 @@ namespace MazeViewer.UI
     {
         [SerializeField] private ProgressMgr progressMgr = default;
         [SerializeField] private Slider slider = null;
+        [SerializeField] private Text stepShower = default;
 
         private void Awake()
         {
@@ -32,15 +33,16 @@ namespace MazeViewer.UI
                 return;
             }
 
-            progressMgr.postLoadChainEvent += UpdateScrollBarStep;
+            progressMgr.postLoadChainEvent += SliderStepCountUpdate;
             progressMgr.stepChangeEvent += UpdateProgressBar;
         }
 
-        private void UpdateScrollBarStep()
+        private void SliderStepCountUpdate()
         {
             slider.wholeNumbers = true;
             slider.minValue = 0;
-            slider.maxValue = progressMgr.CurrentStep;
+            slider.maxValue = progressMgr.StepCount;
+            stepShower.text = $"0/{progressMgr.StepCount}";
         }
 
         /// <summary>
@@ -49,6 +51,7 @@ namespace MazeViewer.UI
         public void UpdateProgressBar(int step)
         {
             slider.SetValueWithoutNotify(step);
+            stepShower.text = $"{step}/{progressMgr.StepCount}";
         }
 
         /// <summary>

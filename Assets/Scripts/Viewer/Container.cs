@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +43,7 @@ namespace MazeViewer.Viewer
 
         IEnumerator MergeMesh()
         {
+            var timeWatcher = System.Diagnostics.Stopwatch.StartNew();
             int meshMerged = 0;
             GameObject targetObj = Instantiate(rendererPrefeb, mergedMeshes);
             var targetRenderer = targetObj.GetComponent<MeshRenderer>();
@@ -89,13 +90,14 @@ namespace MazeViewer.Viewer
                     meshMerged = toAddInstances.Count;
                 }
                 toAddInstances.Clear();
-                if(Time.time - beginTime > 0.02)
+                // 超时则跳过这一帧
+                if(timeWatcher.ElapsedMilliseconds > 5)
                 {
-                    beginTime = Time.time;
+                    timeWatcher.Restart();
                     yield return null;
                 }
             }
-
+            StatusInfo.Instance.PrintInfo("迷宫场景已加载完毕");
         }
 
         /// <summary>
@@ -139,12 +141,12 @@ namespace MazeViewer.Viewer
             // merge all walls
             StartCoroutine(MergeMesh());
             // read result
-            OperationChain chain = new OperationChain();
+            List<IRecovableOperation> operations = new List<IRecovableOperation>();
             List<Vector2Int> way = new List<Vector2Int>();
             StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
             try
             {
-                chain = MazeIO.ReadSearchDataFromFile(resultPath,
+                operations = MazeIO.ReadSearchDataFromFile(resultPath,
                     cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
             }
             catch (FileNotFoundException)
@@ -155,9 +157,8 @@ namespace MazeViewer.Viewer
             {
                 StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
-            chain.AddAndExcuteOperation(new PathDrawOperation(way, pathDrawer));
-            progressMgr.LoadOperationChain(chain);
-            progressMgr.BackToBegin();
+            operations.Add(new PathDrawOperation(way, pathDrawer));
+            progressMgr.LoadOperationChain(new OperationChain(operations, -1));
             pathDrawer.HidePath();
             StatusInfo.Instance.PrintInfo("迷宫数据已加载");
         }

@@ -77,7 +77,7 @@ namespace MazeViewer.Viewer
                 {
                     beginEvent?.Invoke();
                 }
-                if(chain.IsEnd)
+                else if(chain.IsEnd)
                 {
                     endEvent?.Invoke();
                 }
