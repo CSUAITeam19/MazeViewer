@@ -12,6 +12,7 @@ namespace MazeViewer.Viewer
     {
         protected Vector2Int cellPosition;
         protected CellSearchData searchData = CellSearchData.defaultData;
+
         public CellSearchData SearchData => searchData;
 
         public virtual Vector2Int CellPosition

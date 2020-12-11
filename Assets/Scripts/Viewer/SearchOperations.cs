@@ -14,10 +14,10 @@ namespace MazeViewer.Viewer
         private readonly CellSearchData lastData;
         private readonly CellSearchData nextData;
 
-        public MetaSearchOperation(ICellObj target, CellSearchData nextData)
+        public MetaSearchOperation(ICellObj target, CellSearchData lastData,CellSearchData nextData)
         {
             this.target = target;
-            lastData = target.SearchData;
+            this.lastData = lastData;
             this.nextData = nextData;
         }
 
@@ -37,32 +37,6 @@ namespace MazeViewer.Viewer
         }
     }
     /// <summary>
-    /// 生成单个元操作
-    /// </summary>
-    public static class MetaSearchOperationFactory
-    {
-        public static MetaSearchOperation MakeOpenOperation(ICellObj target, int cost, int h)
-        {
-            return new MetaSearchOperation(target, new CellSearchData(SearchState.Opened, cost, h));
-        }
-        public static MetaSearchOperation MakeCloseOperation(ICellObj target, int cost, int h)
-        {
-            return new MetaSearchOperation(target, new CellSearchData(SearchState.Closed, cost, h));
-        }
-        public static MetaSearchOperation MakeCostRefreshOperation(ICellObj target, int cost)
-        {
-            CellSearchData data = target.SearchData;
-            data.cost = cost;
-            return new MetaSearchOperation(target, data);
-        }
-        public static MetaSearchOperation MakeDelOperation(ICellObj target)
-        {
-            CellSearchData data = target.SearchData;
-            data.state = SearchState.Idle;
-            return new MetaSearchOperation(target, data);
-        }
-    }
-    /// <summary>
     /// 搜索步骤: 由若干搜索元操作组成
     /// </summary>
     public class StepOperation:IRecovableOperation
@@ -73,7 +47,7 @@ namespace MazeViewer.Viewer
         /// 添加新的元操作
         /// </summary>
         /// <param name="metaOperation">待添加的操作</param>
-        public void Add(MetaSearchOperation metaOperation)
+        public void Add(IRecovableOperation metaOperation)
         {
             searchOperList.Add(metaOperation);
         }
