@@ -8,9 +8,10 @@ namespace MazeViewer.Viewer
     public class RouteCell : BasicCell
     {
 
-        [SerializeField] private ColorChange colorChanges = default;
+        [SerializeField] private MaterialChange materialChange = default;
         [SerializeField] private GameObject dataText = default;
         [SerializeField] private TextMesh  cost = default, h = default;
+        public Material idleMaterial, openMaterial, closedMaterial;
 
         public override MazeState State => MazeState.Route;
 
@@ -34,8 +35,8 @@ namespace MazeViewer.Viewer
         private void StartOpenEffect()
         {
             dataText.SetActive(true);
-            colorChanges.ResetColor(Color.green);
-            colorChanges.Play();
+            materialChange.targetMaterial = openMaterial;
+            materialChange.Play();
         }
 
         /// <summary>
@@ -44,8 +45,8 @@ namespace MazeViewer.Viewer
         private void StartCloseEffect()
         {
             dataText.SetActive(true);
-            colorChanges.ResetColor(Color.gray);
-            colorChanges.Play();
+            materialChange.targetMaterial = closedMaterial;
+            materialChange.Play();
         }
 
         /// <summary>
@@ -53,9 +54,9 @@ namespace MazeViewer.Viewer
         /// </summary>
         private void BackToIdle()
         {
-            colorChanges.ResetColor(Color.white);
-            colorChanges.Stop();
             dataText.SetActive(false);
+            materialChange.targetMaterial = idleMaterial;
+            materialChange.Play();
         }
         public override void UpdateSearchState(CellSearchData searchData)
         {

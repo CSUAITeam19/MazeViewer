@@ -101,9 +101,19 @@ namespace MazeViewer.Viewer
         }
 
         /// <summary>
-        /// 加载迷宫
+        /// 加载迷宫和搜索数据
         /// </summary>
-        public void LoadMaze()
+        public void LoadAll()
+        {
+            if (!LoadMaze()) return;
+            LoadResult();
+        }
+
+        /// <summary>
+        /// 加载迷宫, 失败则返回false
+        /// </summary>
+        /// <returns></returns>
+        public bool LoadMaze()
         {
             List<List<MazeState>> maze = new List<List<MazeState>>();
             try
@@ -114,19 +124,20 @@ namespace MazeViewer.Viewer
             {
                 StatusInfo.Instance.PrintError($"无法打开路径为\"{mazePath}\"的迷宫文件!");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 StatusInfo.Instance.PrintError($"加载迷宫时发生未知错误:{e}");
             }
+
             // return if empty
-            if(maze.Count < 1 || maze[0].Count < 1)
-                return;
+            if (maze.Count < 1 || maze[0].Count < 1)
+                return false;
             // convert all to cellObjs;
             cellObjs = new List<List<GameObject>>();
-            for(var i = 0; i < maze.Count; i++)
+            for (var i = 0; i < maze.Count; i++)
             {
                 cellObjs.Add(new List<GameObject>());
-                for(var j = 0; j < maze[0].Count; j++)
+                for (var j = 0; j < maze[0].Count; j++)
                 {
                     cellObjs[i].Add(cellFactory.GetCellObj(new Vector2Int(i, j), maze[i][j]));
                     cellObjs[i][j].transform.SetParent(transform);
@@ -140,7 +151,14 @@ namespace MazeViewer.Viewer
 
             // merge all walls
             StartCoroutine(MergeMesh());
-            // read result
+            return true;
+        }
+        
+        /// <summary>
+        /// 加载搜索结果
+        /// </summary>
+        public void LoadResult()
+        {
             List<IRecovableOperation> operations = new List<IRecovableOperation>();
             List<Vector2Int> way = new List<Vector2Int>();
             StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
@@ -151,12 +169,13 @@ namespace MazeViewer.Viewer
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintError($"无法打开路径为\"{mazePath}\"的搜索文件!");
+                StatusInfo.Instance.PrintError($"无法打开路径为\"{resultPath}\"的搜索文件!");
             }
             catch (Exception)
             {
                 StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
+
             operations.Add(new PathDrawOperation(way, pathDrawer));
             progressMgr.LoadOperationChain(new OperationChain(operations, -1));
             pathDrawer.HidePath();
@@ -164,11 +183,19 @@ namespace MazeViewer.Viewer
         }
 
         /// <summary>
-        /// 清空迷宫
+        /// 仅清除搜索结果
         /// </summary>
-        public void ClearMaze()
+        public void ClearResult()
         {
             progressMgr.BackToBegin();
+        }
+
+        /// <summary>
+        /// 清空整个场景
+        /// </summary>
+        public void ClearAll()
+        {
+            ClearResult();
             cellFactory.RecycleAll();
             // 清除所有生成的网格
             for(int i = 0; i < mergedMeshes.childCount; i++)
@@ -219,8 +246,8 @@ namespace MazeViewer.Viewer
         /// </summary>
         public void ReloadMaze()
         {
-            ClearMaze();
-            LoadMaze();
+            ClearAll();
+            LoadAll();
         }
 
         public void UpdateMazePath(string path) => mazePath = path;

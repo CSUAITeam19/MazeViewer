@@ -46,6 +46,7 @@ namespace MazeViewer.Viewer
         }
 
         private string cfgPath = "./Config.json";
+        private string CfgPathFull => Path.Combine(Application.dataPath, cfgPath);
         private Config config;
         [SerializeField] private InputField mazePathField = default, resultPathField = default;
         [SerializeField] private Container container = default;
@@ -128,6 +129,23 @@ namespace MazeViewer.Viewer
         {
             Debug.Log("Update maze called!");
             container.ReloadMaze();
+        }
+
+        /// <summary>
+        /// 重载配置
+        /// </summary>
+        public void ReloadConfig()
+        {
+            try
+            {
+                config = JsonUtility.FromJson<Config>(File.ReadAllText(CfgPathFull));
+                StatusInfo.Instance.PrintInfo("配置已重载");
+                ApplyConfig();
+            }
+            catch (FileNotFoundException)
+            {
+                StatusInfo.Instance.PrintError("未找到配置文件");
+            }
         }
     } 
 }
