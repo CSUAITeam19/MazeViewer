@@ -67,6 +67,7 @@ namespace MazeViewer.UI
             if(!aligners.Contains(toAdd))
             {
                 aligners.Add(toAdd);
+                toAdd.UpdateDirection(toAlign);
             }
         }
 
