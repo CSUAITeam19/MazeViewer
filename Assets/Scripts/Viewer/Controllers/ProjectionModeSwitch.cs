@@ -34,7 +34,7 @@ namespace MazeViewer.Viewer.Control
                 orthoController.enabled = true;
                 // 考虑到可能下落到过低的位置, 重设一下y
                 Vector3 posTemp = transform.position;
-                if (posTemp.y < 0) transform.position = new Vector3(posTemp.x, 5.0f, posTemp.z);
+                if (posTemp.y < 0) transform.position = new Vector3(posTemp.x, 2.0f, posTemp.z);
                 // 往下看
                 transform.LookAt(transform.position - Vector3.up, Vector3.forward);
             }
