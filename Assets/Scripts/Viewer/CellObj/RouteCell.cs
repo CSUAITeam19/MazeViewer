@@ -8,12 +8,39 @@ namespace MazeViewer.Viewer
     public class RouteCell : BasicCell
     {
 
-        [SerializeField] private MaterialChange materialChange = default;
         [SerializeField] private GameObject dataText = default;
         [SerializeField] private TextMesh  cost = default, h = default;
+        [SerializeField] private MeshRenderer targetRenderer = default;
+        private bool changeFlag = false;
+        private SearchState nextState = SearchState.Idle;
         public Material idleMaterial, openMaterial, closedMaterial;
-
         public override MazeState State => MazeState.Route;
+
+        private void Awake()
+        {
+            if (targetRenderer == null) targetRenderer = GetComponent<MeshRenderer>();
+        }
+
+        private void Update()
+        {
+            // 有变化再修改, 否则啥都不干
+            if(changeFlag)
+            {
+                switch (nextState)
+                {
+                    case SearchState.Idle:
+                        BackToIdle();
+                        break;
+                    case SearchState.Opened:
+                        StartOpenEffect();
+                        break;
+                    case SearchState.Closed:
+                        StartCloseEffect();
+                        break;
+                }
+                changeFlag = false;
+            }
+        }
 
         /// <summary>
         /// 刷新搜索数据
@@ -35,8 +62,8 @@ namespace MazeViewer.Viewer
         private void StartOpenEffect()
         {
             dataText.SetActive(true);
-            materialChange.targetMaterial = openMaterial;
-            materialChange.Play();
+            if(targetRenderer != null)
+                targetRenderer.material = openMaterial;
         }
 
         /// <summary>
@@ -45,8 +72,8 @@ namespace MazeViewer.Viewer
         private void StartCloseEffect()
         {
             dataText.SetActive(true);
-            materialChange.targetMaterial = closedMaterial;
-            materialChange.Play();
+            if(targetRenderer != null)
+                targetRenderer.material = closedMaterial;
         }
 
         /// <summary>
@@ -55,25 +82,15 @@ namespace MazeViewer.Viewer
         private void BackToIdle()
         {
             dataText.SetActive(false);
-            materialChange.targetMaterial = idleMaterial;
-            materialChange.Play();
+            if(targetRenderer != null)
+                targetRenderer.material = idleMaterial;
         }
         public override void UpdateSearchState(CellSearchData searchData)
         {
             if(searchData.state != this.searchData.state)
             {
-                switch (searchData.state)
-                {
-                    case SearchState.Opened:
-                        StartOpenEffect();
-                        break;
-                    case SearchState.Closed:
-                        StartCloseEffect();
-                        break;
-                    case SearchState.Idle:
-                        BackToIdle();
-                        break;
-                }
+                nextState = searchData.state;
+                changeFlag = true;
             }
             this.searchData = searchData;
             RefreshData();
