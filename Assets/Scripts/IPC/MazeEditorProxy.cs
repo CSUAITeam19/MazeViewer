@@ -44,7 +44,7 @@ public class MazeEditorProxy : MonoBehaviour
             this.data = data;
         }
     }
-    private RequestSocket socket;
+    private NetMQSocket socket;
     private Thread sockeThread;
     private bool terminated = false;
 
@@ -163,16 +163,20 @@ public class MazeEditorProxy : MonoBehaviour
         // 初始化AsyncIO
         AsyncIO.ForceDotNet.Force();
         terminated = false;
-        using(socket = new RequestSocket(ConfigManager.instance.Current.mazeEditorAddress))
+        using(socket = new PullSocket(ConfigManager.instance.Current.mazeEditorAddress))
         {
             try
             {
-                socket.SendFrame("Unity_Client");
+                // socket.SendFrame("Unity_Client");
+                Debug.Log("Now wait for new msg.");
                 FrameStringProcess(socket.ReceiveFrameString());
+                Debug.Log("received.");
                 while (!terminated)
                 {
-                    socket.SendFrameEmpty();
+                    // socket.SendFrameEmpty();
+                    Debug.Log("Now wait for new msg.");
                     FrameStringProcess(socket.ReceiveFrameString());
+                    Debug.Log("received.");
                 }
             }
             catch (TerminatingException)
@@ -198,5 +202,18 @@ public class MazeEditorProxy : MonoBehaviour
         // It works!
         UnityEditor.AssemblyReloadEvents.beforeAssemblyReload -= ClearSocket;
 #endif
+    }
+
+    /// <summary>
+    /// 重新加载套接字相关的事项
+    /// </summary>
+    [ContextMenu("Reset Everything")]
+    public void ResetEverything()
+    {
+        NetMQConfig.Cleanup();
+        terminated = true;
+        sockeThread.Abort();
+        sockeThread = new Thread(SocketLoop);
+        sockeThread.Start();
     }
 }
