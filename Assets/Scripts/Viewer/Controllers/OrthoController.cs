@@ -44,6 +44,7 @@ namespace MazeViewer.Viewer.Control
                 }
                 float zoom = Input.mouseScrollDelta.y * zoomRate;
                 thisCamera.orthographicSize -= zoom;
+                thisCamera.orthographicSize = Mathf.Max(0.1f, thisCamera.orthographicSize);
             }
         }
     }

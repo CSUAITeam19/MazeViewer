@@ -2015,29 +2015,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0.1, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 3, y: 0, z: 5}
-  - {x: 5, y: 0, z: 0}
-  - {x: 7, y: 0, z: 5}
-  - {x: 9, y: 0, z: 0}
-  - {x: 11, y: 0, z: 5}
-  - {x: 13, y: 0, z: 0}
-  - {x: 10, y: 0, z: 2.5}
-  - {x: 12, y: 0, z: 2.5}
-  - {x: 14, y: 0, z: 5}
-  - {x: 18, y: 0, z: 5}
-  - {x: 14, y: 0, z: 0}
-  - {x: 18, y: 0, z: 0}
-  - {x: 24, y: 0, z: 5}
-  - {x: 20, y: 0, z: 5}
-  - {x: 20, y: 0, z: 0}
-  - {x: 24, y: 0, z: 0}
-  - {x: 20, y: 0, z: 2.5}
-  - {x: 24, y: 0, z: 2.5}
-  - {x: 24, y: 0, z: -1}
-  - {x: 0, y: -0.1, z: -1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.25
@@ -2653,13 +2631,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 7, y: 16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
