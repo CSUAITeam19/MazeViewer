@@ -98,8 +98,6 @@ public class MazeEditorProxy : MonoBehaviour
                     resultPathChangeEvent?.Invoke(editorEvent);
                     break;
             }
-
-            StatusInfo.Instance.PrintInfo($"获取类型为{editorEvent.eventType}的套接字信息:{editorEvent.data}");
         }
     }
 
@@ -167,16 +165,10 @@ public class MazeEditorProxy : MonoBehaviour
         {
             try
             {
-                // socket.SendFrame("Unity_Client");
-                Debug.Log("Now wait for new msg.");
                 FrameStringProcess(socket.ReceiveFrameString());
-                Debug.Log("received.");
                 while (!terminated)
                 {
-                    // socket.SendFrameEmpty();
-                    Debug.Log("Now wait for new msg.");
                     FrameStringProcess(socket.ReceiveFrameString());
-                    Debug.Log("received.");
                 }
             }
             catch (TerminatingException)
