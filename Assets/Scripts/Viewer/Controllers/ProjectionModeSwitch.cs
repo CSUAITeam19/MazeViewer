@@ -10,15 +10,15 @@ namespace MazeViewer.Viewer.Control
     /// </summary>
     public class ProjectionModeSwitch : MonoBehaviour
     {
-        private Camera thisCamera;
-        private FPController fpController;
-        private OrthoController orthoController;
+        [SerializeField] private Camera thisCamera = null;
+        [SerializeField] private FPController fpController = null;
+        [SerializeField] private OrthoController orthoController = null;
         
         private void Awake()
         {
-            thisCamera = GetComponent<Camera>();
-            fpController = GetComponent<FPController>();
-            orthoController = GetComponent<OrthoController>();
+            if(thisCamera == null) thisCamera = GetComponent<Camera>();
+            if(fpController == null) fpController = GetComponent<FPController>();
+            if(orthoController == null) orthoController = GetComponent<OrthoController>();
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace MazeViewer.Viewer.Control
                 orthoController.enabled = true;
                 // 考虑到可能下落到过低的位置, 重设一下y
                 Vector3 posTemp = transform.position;
-                if (posTemp.y < 0) transform.position = new Vector3(posTemp.x, 2.0f, posTemp.z);
+                transform.position = new Vector3(posTemp.x, 2.0f, posTemp.z);
                 // 往下看
                 transform.LookAt(transform.position - Vector3.up, Vector3.forward);
             }

@@ -14,11 +14,11 @@ namespace MazeViewer.Viewer.Control
         public float zoomRate = 1.0f;
 
         private Vector2 lastMousePos;
-        private Camera thisCamera;
+        [SerializeField] private Camera thisCamera = null;
 
         private void Awake()
         {
-            thisCamera = GetComponent<Camera>();
+            if (thisCamera == null) thisCamera = GetComponent<Camera>();
         }
 
         void Update()

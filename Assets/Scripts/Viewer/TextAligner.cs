@@ -7,7 +7,6 @@ namespace MazeViewer.UI
 {
     public class TextAligner : MonoBehaviour
     {
-        [SerializeField] private Transform anchor = default;
         [SerializeField] private int availableDistance = 10;
         private MeshRenderer[] renderers;
         /// <summary>
@@ -50,9 +49,7 @@ namespace MazeViewer.UI
 
         public void UpdateDirection(Vector3 toAlignDirection)
         {
-            Vector3 current = anchor.forward;
-            Quaternion rotate = Quaternion.FromToRotation(current, toAlignDirection);
-            transform.rotation *= rotate;
+            transform.rotation = Quaternion.LookRotation(toAlignDirection, Vector3.up);
         }
     }
 
