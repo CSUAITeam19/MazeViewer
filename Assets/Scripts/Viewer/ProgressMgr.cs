@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MazeViewer.UI;
 using Unitilities;
 using UnityEngine;
+using Logger = MazeViewer.UI.Logger;
 
 namespace MazeViewer.Viewer
 {
@@ -44,13 +45,13 @@ namespace MazeViewer.Viewer
         {
             endEvent += () =>
             {
-                StatusInfo.Instance.PrintInfo("搜索结束");
+                Logger.Instance.PrintInfo("搜索结束");
                 playSpeed = 0;
             };
             
             beginEvent += () =>
             {
-                StatusInfo.Instance.PrintInfo("搜索开始");
+                Logger.Instance.PrintInfo("搜索开始");
                 playSpeed = 0;
             };
             

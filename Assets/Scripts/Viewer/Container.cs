@@ -7,6 +7,7 @@ using MazeViewer.Maze;
 using MazeViewer.UI;
 using Unitilities;
 using UnityEngine.Serialization;
+using Logger = MazeViewer.UI.Logger;
 
 namespace MazeViewer.Viewer
 {
@@ -97,7 +98,7 @@ namespace MazeViewer.Viewer
                     yield return null;
                 }
             }
-            StatusInfo.Instance.PrintInfo("迷宫场景已加载完毕");
+            Logger.Instance.PrintInfo("迷宫场景已加载完毕");
         }
 
         /// <summary>
@@ -122,11 +123,11 @@ namespace MazeViewer.Viewer
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintError($"无法打开路径为\"{mazePath}\"的迷宫文件!");
+                Logger.Instance.PrintError($"无法打开路径为\"{mazePath}\"的迷宫文件!");
             }
             catch (Exception e)
             {
-                StatusInfo.Instance.PrintError($"加载迷宫时发生未知错误:{e}");
+                Logger.Instance.PrintError($"加载迷宫时发生未知错误:{e}");
             }
 
             // return if empty
@@ -161,7 +162,7 @@ namespace MazeViewer.Viewer
         {
             List<IRecovableOperation> operations = new List<IRecovableOperation>();
             List<Vector2Int> way = new List<Vector2Int>();
-            StatusInfo.Instance.PrintInfo("正在载入搜索数据...");
+            Logger.Instance.PrintInfo("正在载入搜索数据...");
             try
             {
                 operations = MazeIO.ReadSearchDataFromFile(resultPath,
@@ -169,17 +170,17 @@ namespace MazeViewer.Viewer
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintError($"无法打开路径为\"{resultPath}\"的搜索文件!");
+                Logger.Instance.PrintError($"无法打开路径为\"{resultPath}\"的搜索文件!");
             }
             catch (Exception)
             {
-                StatusInfo.Instance.PrintError("加载搜索数据时出现未知错误!");
+                Logger.Instance.PrintError("加载搜索数据时出现未知错误!");
             }
 
             operations.Add(new PathDrawOperation(way, pathDrawer));
             progressMgr.LoadOperationChain(new OperationChain(operations, -1));
             pathDrawer.HidePath();
-            StatusInfo.Instance.PrintInfo("迷宫数据已加载");
+            Logger.Instance.PrintInfo("迷宫数据已加载");
         }
 
         /// <summary>
@@ -205,7 +206,7 @@ namespace MazeViewer.Viewer
                 // TODO: recycle gameObject
                 Destroy(tempObject);
             }
-            StatusInfo.Instance.PrintInfo("迷宫已初始化");
+            Logger.Instance.PrintInfo("迷宫已初始化");
         }
 
         private void Update()

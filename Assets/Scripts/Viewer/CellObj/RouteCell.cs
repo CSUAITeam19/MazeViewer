@@ -1,13 +1,13 @@
 ﻿using System;
 using UnityEngine;
 using MazeViewer.Maze;
+using MazeViewer.UI;
 using Unitilities.Effect;
 
 namespace MazeViewer.Viewer
 {
     public class RouteCell : BasicCell
     {
-
         [SerializeField] private GameObject dataText = default;
         [SerializeField] private TextMesh  cost = default, h = default;
         [SerializeField] private MeshRenderer targetRenderer = default;

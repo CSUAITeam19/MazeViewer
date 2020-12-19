@@ -8,15 +8,15 @@ using UnityEngine.UI;
 namespace MazeViewer.UI
 {
     /// <summary>
-    /// 状态信息
+    /// 日志显示器
     /// <para>单例</para>
     /// </summary>
-    public class StatusInfo : MonoBehaviour
+    public class Logger : MonoBehaviour
     {
         private List<string> infoList = new List<string>();
         private List<IEnumerator> timerList = new List<IEnumerator>();
         [SerializeField] private Text thisText = default;
-        public static StatusInfo Instance { get; private set; }
+        public static Logger Instance { get; private set; }
 
         /// <summary>
         /// 最大信息数
