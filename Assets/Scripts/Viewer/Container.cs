@@ -16,6 +16,7 @@ namespace MazeViewer.Viewer
         [SerializeField] private List<List<GameObject>> cellObjs;
 
         [SerializeField] private CellFactory cellFactory = default;
+        [SerializeField] private EffectFactory effectFactory = default;
         [SerializeField] private ProgressMgr progressMgr = default;
         public float scale;
         [FormerlySerializedAs("path")] public string mazePath = "";
@@ -189,6 +190,7 @@ namespace MazeViewer.Viewer
         public void ClearResult()
         {
             progressMgr.BackToBegin();
+            EffectFactory.Instance.Initialize();
         }
 
         /// <summary>

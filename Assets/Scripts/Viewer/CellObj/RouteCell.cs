@@ -13,6 +13,8 @@ namespace MazeViewer.Viewer
         [SerializeField] private MeshRenderer targetRenderer = default;
         private bool changeFlag = false;
         private SearchState nextState = SearchState.Idle;
+        private GameObject currentEffect = null;
+
         public Material idleMaterial, openMaterial, closedMaterial;
         public override MazeState State => MazeState.Route;
 
@@ -64,6 +66,8 @@ namespace MazeViewer.Viewer
             dataText.SetActive(true);
             if(targetRenderer != null)
                 targetRenderer.material = openMaterial;
+            currentEffect = EffectFactory.Instance.GetActivateEffect(transform.position - Vector3.up * 0.5f, transform);
+            currentEffect.GetComponent<ParticleSystem>().Play();
         }
 
         /// <summary>
@@ -74,6 +78,11 @@ namespace MazeViewer.Viewer
             dataText.SetActive(true);
             if(targetRenderer != null)
                 targetRenderer.material = closedMaterial;
+            if(currentEffect != null)
+            {
+                currentEffect.GetComponent<ParticleSystem>().Stop();
+                EffectFactory.Instance.RecycleActivateEffect(currentEffect);
+            }
         }
 
         /// <summary>
@@ -84,6 +93,11 @@ namespace MazeViewer.Viewer
             dataText.SetActive(false);
             if(targetRenderer != null)
                 targetRenderer.material = idleMaterial;
+            if(currentEffect != null)
+            {
+                currentEffect.GetComponent<ParticleSystem>().Stop();
+                EffectFactory.Instance.RecycleActivateEffect(currentEffect);
+            }
         }
         public override void UpdateSearchState(CellSearchData searchData)
         {
