@@ -12,6 +12,7 @@ namespace MazeViewer.UI
     public class StatusBar : MonoBehaviour
     {
         [SerializeField] private Text mouseOnPos = default;
+        [SerializeField] private Text finalCostText = default;
 
         public static StatusBar Instance { get; private set; }
 
@@ -24,6 +25,14 @@ namespace MazeViewer.UI
             else
             {
                 mouseOnPos.text = "";
+            }
+            if(finalCostText == null)
+            {
+                Debug.LogError("finalCost is null!");
+            }
+            else
+            {
+                finalCostText.text = "";
             }
             if(Instance == null)
             {
@@ -43,6 +52,11 @@ namespace MazeViewer.UI
         public void MouseLeaveCell()
         {
             mouseOnPos.text = "";
+        }
+
+        public void SetFinalCost(int finalCost)
+        {
+            finalCostText.text = $"总代价: {finalCost}";
         }
     }
 

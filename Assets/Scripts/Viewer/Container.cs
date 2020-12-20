@@ -52,7 +52,6 @@ namespace MazeViewer.Viewer
             var targetFilter = targetObj.GetComponent<MeshFilter>();
             var toAddInstances = new List<CombineInstance>();
             targetRenderer.sharedMaterial = wallMaterial;
-            float beginTime = Time.time;
 
             foreach(var row in cellObjs)
             {
@@ -163,11 +162,12 @@ namespace MazeViewer.Viewer
         {
             List<IRecovableOperation> operations = new List<IRecovableOperation>();
             List<Vector2Int> way = new List<Vector2Int>();
+            int finalCost = 0;
             Logger.Instance.PrintInfo("正在载入搜索数据...");
             try
             {
                 operations = MazeIO.ReadSearchDataFromFile(resultPath,
-                    cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way);
+                    cellObjs.ConvertAll(row => row.ConvertAll(obj => obj.GetComponent<ICellObj>())), out way, out finalCost);
             }
             catch (FileNotFoundException)
             {
@@ -181,6 +181,7 @@ namespace MazeViewer.Viewer
             operations.Add(new PathDrawOperation(way, pathDrawer));
             progressMgr.LoadOperationChain(new OperationChain(operations, -1));
             pathDrawer.HidePath();
+            StatusBar.Instance.SetFinalCost(finalCost);
             Logger.Instance.PrintInfo("迷宫数据已加载");
         }
 
