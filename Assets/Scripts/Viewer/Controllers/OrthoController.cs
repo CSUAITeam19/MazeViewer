@@ -45,6 +45,10 @@ namespace MazeViewer.Viewer.Control
                 float zoom = Input.mouseScrollDelta.y * zoomRate;
                 thisCamera.orthographicSize -= zoom;
                 thisCamera.orthographicSize = Mathf.Max(0.1f, thisCamera.orthographicSize);
+                Vector3 tempPos = transform.position - Vector3.up * (zoom * 1f);
+                tempPos.y = Mathf.Max(1.1f,tempPos.y);
+                transform.position = tempPos;
+
             }
         }
     }
