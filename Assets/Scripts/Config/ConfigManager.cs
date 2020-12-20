@@ -5,6 +5,7 @@ using System.IO;
 using MazeViewer.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Logger = MazeViewer.UI.Logger;
 
 namespace MazeViewer.Viewer
 {
@@ -139,12 +140,12 @@ namespace MazeViewer.Viewer
             try
             {
                 config = JsonUtility.FromJson<Config>(File.ReadAllText(CfgPathFull));
-                StatusInfo.Instance.PrintInfo("配置已重载");
+                Logger.Instance.PrintInfo("配置已重载");
                 ApplyConfig();
             }
             catch (FileNotFoundException)
             {
-                StatusInfo.Instance.PrintError("未找到配置文件");
+                Logger.Instance.PrintError("未找到配置文件");
             }
         }
     } 

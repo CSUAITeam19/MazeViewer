@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MazeViewer.Maze;
+using MazeViewer.UI;
 using UnityEngine;
 
 namespace MazeViewer.Viewer
@@ -37,6 +39,16 @@ namespace MazeViewer.Viewer
             // Debug.Log(cellPosition + ": search state: " + searchData.state);
         }
 
+        private void OnMouseEnter()
+        {
+            
+            StatusBar.Instance.MouseOnCell(CellPosition);
+        }
+
+        private void OnMouseExit()
+        {
+            StatusBar.Instance.MouseLeaveCell();
+        }
     }
 
 }

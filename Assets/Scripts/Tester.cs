@@ -13,72 +13,19 @@ namespace MazeViewer
     /// </summary>
     public class Tester : MonoBehaviour
     {
-        private void Start()
+        private void Update()
         {
-            MazeEditorProxy.instance.editorHandShakeEvent += e => { Debug.Log("Hand shake!"); };
-            MazeEditorProxy.instance.mazePathChangeEvent += e => { Debug.Log($"Maze path changed! path: {e.data}"); };
+            Camera main = Camera.main;
+            var pos = Input.mousePosition;
+            var ray = main.ScreenPointToRay(pos);
+            Debug.DrawLine(main.transform.position, main.transform.position + ray.direction * 100f);
+            var hits = Physics.RaycastAll(ray);
+            string logStr = "";
+            foreach (var raycastHit in hits)
+            {
+                logStr += $"{raycastHit.transform.name}, ";
+            }
+            Debug.Log("Hits: " + logStr);
         }
-
-        //[ContextMenu("Close Socket")]
-        //public void CloseSocket()
-        //{
-        //    socket?.Close();
-        //    // call this to clean up everything
-        //    NetMQConfig.Cleanup();
-        //    task.Wait();
-        //}
-
-        //[ContextMenu("Test")]
-        //public void Test()
-        //{
-        //    thread = new Thread(RunSocket);
-        //    thread.IsBackground = true;
-        //    thread.Start();
-        //    UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += Stop;
-        //    // UnityEditor.AssemblyReloadEvents.beforeAssemblyReload += () => { NetMQConfig.Cleanup(); };
-        //}
-
-        //private void RunSocket()
-        //{
-        //    try
-        //    {
-        //        AsyncIO.ForceDotNet.Force();
-        //        using (var socket = new RequestSocket(address))
-        //        {
-        //            Debug.Log("address: " + address);
-        //            socket.SendFrame("Hello!");
-        //            Debug.Log("SendFrame called.");
-        //            string msg;
-        //            bool success = socket.TryReceiveFrameString(TimeSpan.FromSeconds(10), out msg);
-        //            Debug.Log($"ReceiveFrame called. success: {success}, msg: {msg}");
-        //        }
-        //        NetMQConfig.Cleanup();
-        //        UnityEditor.AssemblyReloadEvents.beforeAssemblyReload -= Stop;
-        //        // fucking compatibly of Unity and NetMQ , but fixed now!
-        //    }
-        //    catch(TerminatingException)
-        //    {
-        //        Debug.Log("socket terminated.");
-        //    }
-        //}
-
-        //private void OnApplicationQuit()
-        //{
-        //    Debug.Log("On Application Quit");
-        //}
-
-        //private void OnDisable()
-        //{
-        //    Debug.Log("On Disable");
-        //}
-
-        //[ContextMenu("Stop")]
-        //public void Stop()
-        //{
-        //    NetMQConfig.Cleanup(false);
-        //    Debug.Log("Clean up.");
-        //    UnityEditor.AssemblyReloadEvents.beforeAssemblyReload -= Stop;
-        //    Debug.Log("Cleaned reloadEvent");
-        //}
     } 
 }

@@ -45,9 +45,10 @@ namespace MazeViewer.Maze
         /// <param name="path">文件路径</param>
         /// <param name="cellList">实现搜索操作显示的单元的列表</param>
         /// <param name="way">输出的路径</param>
+        /// <param name="finalCost">到达终点的代价</param>
         /// <returns></returns>
         public static List<IRecovableOperation> ReadSearchDataFromFile(string path, List<List<ICellObj>> cellList,
-            out List<Vector2Int> way)
+            out List<Vector2Int> way, out int finalCost)
         {
             StringReader stringReader;
             //try
@@ -60,6 +61,7 @@ namespace MazeViewer.Maze
             //    return new OperationChain();
             //}
             var operationList = new List<IRecovableOperation>();
+            finalCost = 0;
             using(stringReader = new StringReader(File.ReadAllText(path)))
             {
                 // parser--------------------------
@@ -106,7 +108,7 @@ namespace MazeViewer.Maze
                         int row = int.Parse(operArg[1]);
                         int col = int.Parse(operArg[2]);
                         int cost = operArg.Count > 3 ? int.Parse(operArg[3]) : 0;
-
+                        finalCost = cost;
                         var lastData = tempDataList[row][col];
                         var nextData = lastData;
                         nextData.cost = cost;
